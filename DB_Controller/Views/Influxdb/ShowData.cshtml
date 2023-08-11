@@ -1,0 +1,59 @@
+﻿@model DateTimeFormViewModel
+@{
+    ViewData["Title"] = "InfluxDB Data";
+    var records = ViewBag.records;
+}
+
+<div class="container mt-5">
+    <h2>Date Time Form</h2>
+    <form asp-controller="Influxdb" asp-action="ShowData" method="post">
+        <div class="form-group">
+            <label for="startDate">Start Date:</label>
+            <input type="datetime-local" class="form-control" id="startDate" name="StartDate" value="@Model.StartDate.ToString("yyyy-MM-ddTHH:mm")" required />
+        </div>
+        <div class="form-group">
+            <label for="endDate">End Date:</label>
+            <input type="datetime-local" class="form-control" id="endDate" name="EndDate" value="@Model.EndDate.ToString("yyyy-MM-ddTHH:mm")" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+@if (records != null) {
+    <div class="text-center">
+        <h1 class="display-4">Influx DB Data</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>Result</td>
+                    <td>Table</td>
+                    <td>Start</td>
+                    <td>Stop</td>
+                    <td>Time</td>
+                    <td>Value</td>
+                    <td>Autor</td>
+                    <td>D1</td>
+                    <td>D2</td>
+                    <td>D3</td>
+                    <td>D4</td>
+                    <td>Field</td>
+                    <td>Measurement</td>
+                </tr>
+            </thead>
+    
+        @foreach (var record in records)
+            {
+                @foreach (var test in record.Records)
+                {
+                <tr>
+                    @foreach (var temp in test.Values)
+                    {
+                        <td>@temp.Value</td>
+                    }
+                </tr>
+                }
+            }
+
+        </table>
+    </div>
+}
