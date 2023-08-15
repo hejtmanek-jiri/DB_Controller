@@ -10,9 +10,9 @@ namespace DB_Controller.Controllers
 {
     public class InfluxdbController : Controller
     {
-        private const string TOKEN = "PRXrlRifRdRsksdGsDvnPG-zg-fR4oEAt6w3dU3fb9ra3brL4i1FPNLNhTtMqYDknv2a6du6D1N3igIwQJK1gg==";
-        private const string BUCKET = "Test";
-        private const string ORG = "Test";
+        private const string TOKEN = "3IA4EAnCUMBGqEFPUwXSsiEgamD2xickHBmjk8l5UiqU8OBRnsChgaBVhGq0plueXzn4FhsUfkzAg9ghXLyWLA==";
+        private const string BUCKET = "TEST_DATA";
+        private const string ORG = "TEST_ORG";
         // GET: InfluxdbController
         public ActionResult Index()
         {
@@ -126,7 +126,7 @@ namespace DB_Controller.Controllers
 
             string start = viewModel.StartDate.ToString("yyyy-MM-ddTHH:mm:ssZ");
             string end = viewModel.EndDate.ToString("yyyy-MM-ddTHH:mm:ssZ");
-            string flux = "from(bucket:\"Test\") |> range(start: " + start + ", stop: " + end + ") |> filter(fn: (r) => r._measurement == \"TEST_DATA\")";
+            string flux = "from(bucket:\""+ BUCKET + "\") |> range(start: " + start + ", stop: " + end + ") |> filter(fn: (r) => r._measurement == \"TEST_DATA\")";
 
             if (viewModel.Author != null && viewModel.Author != "") 
             {
