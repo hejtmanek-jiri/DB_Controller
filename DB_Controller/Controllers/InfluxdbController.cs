@@ -10,9 +10,9 @@ namespace DB_Controller.Controllers
 {
     public class InfluxdbController : Controller
     {
-        private const string TOKEN = "PRXrlRifRdRsksdGsDvnPG-zg-fR4oEAt6w3dU3fb9ra3brL4i1FPNLNhTtMqYDknv2a6du6D1N3igIwQJK1gg==";
-        private const string BUCKET = "Test";
-        private const string ORG = "Test";
+        private const string TOKEN = "3i8yzWeyB5Qty2FHwPxLHrNkmMS--KGRMdJBi6Jast_nDsr1foZbn47ldtte9GplHEkcHvDQtiicn2rq-lyikQ==";
+        private const string BUCKET = "TEST_DATA";
+        private const string ORG = "TEST_ORG";
         // GET: InfluxdbController
         public ActionResult Index()
         {
@@ -39,7 +39,6 @@ namespace DB_Controller.Controllers
 
         public IActionResult WriteData()
         {
-            //var token = "02ETE6C2iCcPGs2wmXZBEsPWTIfj0IuWSKru7diR5cdpKWbwQcZBmzd-zhcPhtZNjRzUX6CA0l2AhwS1S1QtFw==";
             try {
                 uploadData("C:\\BC\\data\\data.csv");
             }
@@ -48,8 +47,9 @@ namespace DB_Controller.Controllers
                 return Ok(ex.Message);
             }
 
+            TempData["success"] = "Data successfully added!";
 
-            return Ok("OK");
+            return View("index");
         }
 
         public IActionResult DeleteData()
@@ -61,6 +61,8 @@ namespace DB_Controller.Controllers
                 EndDate = DateTime.Now.AddDays(1)
             };
 
+            TempData["success"] = "Data successfully deleted!";
+
             return View(viewModel);
         }
 
@@ -70,18 +72,9 @@ namespace DB_Controller.Controllers
             {
                 using var client = new InfluxDBClient("http://localhost:8086", TOKEN);
 
-                string selectString = "";
-
                 try
                 {
                     var deleteApi = client.GetDeleteApi();
-
-                    /*DeletePredicateRequest dpr = new DeletePredicateRequest
-                    {
-                        Start = viewModel.StartDate,
-                        Stop = viewModel.EndDate,
-                        Predicate = selectString
-                    };*/
 
                     await deleteApi.Delete(viewModel.StartDate, viewModel.StartDate, "_measurement=TEST_DATA", BUCKET, ORG);
                 }
@@ -109,11 +102,12 @@ namespace DB_Controller.Controllers
                 return Ok(ex.Message);
             }
 
+            TempData["success"] = "Data successfully updated!";
 
-            return Ok("OK");
+            return View("index");
         }
 
-        public async Task<IActionResult> ShowData(DateTimeFormViewModel viewModel)
+        public async Task<IActionResult> ShowDataOld(DateTimeFormViewModel viewModel)
         {
 
             if (viewModel.StartDate == DateTime.MinValue && viewModel.EndDate == DateTime.MinValue)
@@ -126,9 +120,9 @@ namespace DB_Controller.Controllers
 
             string start = viewModel.StartDate.ToString("yyyy-MM-ddTHH:mm:ssZ");
             string end = viewModel.EndDate.ToString("yyyy-MM-ddTHH:mm:ssZ");
-            string flux = "from(bucket:\"Test\") |> range(start: " + start + ", stop: " + end + ") |> filter(fn: (r) => r._measurement == \"TEST_DATA\")";
+            string flux = "from(bucket:\""+ BUCKET + "\") |> range(start: " + start + ", stop: " + end + ") |> filter(fn: (r) => r._measurement == \"TEST_DATA\")";
 
-            if (viewModel.Author != null && viewModel.Author != "") 
+            if (viewModel.Author != null && viewModel.Author != "")
             {
                 flux += " |> filter(fn: (r) => r.AUTHOR == \""+ viewModel.Author + "\")";
             }
@@ -149,6 +143,86 @@ namespace DB_Controller.Controllers
                 flux += " |> filter(fn: (r) => r.D4 == \"" + viewModel.D4 + "\")";
             }
             //var flux = "from(bucket:\"Test\") |> range(start: " + start + ")";
+
+            var fluxTables = await client.GetQueryApi().QueryAsync(flux, ORG);
+
+            var records = fluxTables.ToList();
+            ViewBag.records = records;
+
+            return View(viewModel);
+        }
+
+
+        public async Task<IActionResult> ShowData(DateTimeFormViewModel viewModel)
+        {
+
+            if (viewModel.StartDate == DateTime.MinValue && viewModel.EndDate == DateTime.MinValue)
+            {
+                viewModel.StartDate = DateTime.Now.AddMonths(-3);
+                viewModel.EndDate = DateTime.Now.AddDays(1);
+            }
+
+            using var client = new InfluxDBClient("http://localhost:8086", TOKEN);
+
+            string start = viewModel.StartDate.ToString("yyyy-MM-ddTHH:mm:ssZ");
+            string end = viewModel.EndDate.ToString("yyyy-MM-ddTHH:mm:ssZ");
+            string flux = "from(bucket:\"" + BUCKET + "\") |> range(start: " + start + ", stop: " + end + ") |> filter(fn: (r) => r._measurement == \"TEST_DATA\")";
+
+            if (viewModel.Author != null || viewModel.D1 != null || viewModel.D2 != null || viewModel.D3 != null || viewModel.D4 != null)
+            {
+                string filter = " |> filter(fn: (r) => ";
+                Boolean isFirst = true;
+            
+
+                if (viewModel.Author != null && viewModel.Author != "")
+                {
+                    isFirst = false;
+                    filter +=  "r.AUTHOR == \"" + viewModel.Author + "\" ";
+                }
+                if (viewModel.D1 != null && viewModel.D1 != "")
+                {
+                    if (!isFirst)
+                    {
+                        filter += viewModel.LogicD1;
+                        
+                    }
+                    isFirst = false;
+                    filter += " r.D1 == \"" + viewModel.D1 + "\" ";
+                }
+                if (viewModel.D2 != null && viewModel.D2 != "")
+                {
+                    if (!isFirst)
+                    {
+                        filter += viewModel.LogicD2;
+                        
+                    }
+                    isFirst = false;
+                    filter += "  r.D2 == \"" + viewModel.D2 + "\" ";
+                }
+                if (viewModel.D3 != null && viewModel.D3 != "")
+                {
+                    if (!isFirst)
+                    {
+                        filter += viewModel.LogicD3;
+                        
+                    }
+                    isFirst = false;
+                    filter += "  r.D3 == \"" + viewModel.D3 + "\" ";
+                }
+                if (viewModel.D4 != null && viewModel.D4 != "")
+                {
+                    if (!isFirst)
+                    {
+                        filter += viewModel.LogicD4;
+                        
+                    }
+                    isFirst = false;
+                    filter += " r.D4 == \"" + viewModel.D4 + "\" ";
+                }
+
+                flux +=  filter + ")";
+
+            }
 
             var fluxTables = await client.GetQueryApi().QueryAsync(flux, ORG);
 

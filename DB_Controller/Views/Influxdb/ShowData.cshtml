@@ -20,16 +20,44 @@
             <input type="text" class="form-control" id="Author" name="Author" />
         </div>
         <div class="form-group">
+            <label for="LogicD1">Logic D1:</label>
+            <select id="LogicD1" name="LogicD1" class="form-control">
+                <option value="and">AND</option>
+                <option value="or" selected="selected">OR</option>
+            </select>
+        </div>
+        <div class="form-group">
             <label for="D1">D1:</label>
             <input type="text" class="form-control" id="D1" name="D1" />
+        </div>
+        <div class="form-group">
+            <label for="LogicD2">Logic D2:</label>
+            <select id="LogicD2" name="LogicD2" class="form-control">
+                <option value="and">AND</option>
+                <option value="or" selected="selected">OR</option>
+            </select>
         </div>
         <div class="form-group">
             <label for="D2">D2:</label>
             <input type="text" class="form-control" id="D2" name="D2" />
         </div>
         <div class="form-group">
+            <label for="LogicD3">Logic D3:</label>
+            <select id="LogicD3" name="LogicD3" class="form-control">
+                <option value="and">AND</option>
+                <option value="or" selected="selected">OR</option>
+            </select>
+        </div>
+        <div class="form-group">
             <label for="D3">D3:</label>
             <input type="text" class="form-control" id="D3" name="D3" />
+        </div>
+        <div class="form-group">
+            <label for="LogicD4">Logic D4:</label>
+            <select id="LogicD4" name="LogicD4" class="form-control">
+                <option value="and">AND</option>
+                <option value="or" selected="selected">OR</option>
+            </select>
         </div>
         <div class="form-group">
             <label for="D4">D4:</label>
@@ -78,3 +106,16 @@
         </table>
     </div>
 }
+
+
+<script>
+$(document).ready(function () {
+
+    @if (TempData.ContainsKey("success"))
+    {
+        var message = TempData["success"];
+        var messageType = "success";
+        <text>showPopUpMessage("@message", "@messageType");</text>
+    }
+});
+</script>
