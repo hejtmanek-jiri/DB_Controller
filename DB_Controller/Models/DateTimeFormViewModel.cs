@@ -9,10 +9,10 @@
         public string? D2 { get; set; }
         public string? D3 { get; set; }
         public string? D4 { get; set; }
-        public string LogicD1 { get; set; }
-        public string LogicD2 { get; set; }
-        public string LogicD3 { get; set; }
-        public string LogicD4 { get; set; }
+        public string? LogicD1 { get; set; }
+        public string? LogicD2 { get; set; }
+        public string? LogicD3 { get; set; }
+        public string? LogicD4 { get; set; }
 
     }
 }

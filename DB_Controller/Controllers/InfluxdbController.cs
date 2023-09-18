@@ -76,7 +76,7 @@ namespace DB_Controller.Controllers
                 {
                     var deleteApi = client.GetDeleteApi();
 
-                    await deleteApi.Delete(viewModel.StartDate, viewModel.StartDate, "_measurement=TEST_DATA", BUCKET, ORG);
+                    await deleteApi.Delete(viewModel.StartDate, viewModel.EndDate, "_measurement=TEST_DATA", BUCKET, ORG);
                 }
                 catch (Exception ex)
                 {
