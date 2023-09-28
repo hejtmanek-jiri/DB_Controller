@@ -1,7 +1,17 @@
+using DB_Controller.DbSettings;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+IConfiguration Configuration = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json")
+        .Build();
+
+builder.Services.Configure<GeneralDbSettings>(Configuration.GetSection("GeneralDbSettings"));
+builder.Services.Configure<InfluxDbSettings>(Configuration.GetSection("InfluxDbSettings"));
 
 var app = builder.Build();
 

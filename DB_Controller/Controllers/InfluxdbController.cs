@@ -1,18 +1,22 @@
 ﻿using CsvHelper;
+using DB_Controller.DbSettings;
 using DB_Controller.Models;
 using InfluxDB.Client;
 using InfluxDB.Client.Api.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Globalization;
 
 namespace DB_Controller.Controllers
 {
-    public class InfluxdbController : Controller
+    [Obsolete("This controller is deprecated and should not be used!")]
+    public class InfluxdbController : DbController
     {
-        private const string TOKEN = "3i8yzWeyB5Qty2FHwPxLHrNkmMS--KGRMdJBi6Jast_nDsr1foZbn47ldtte9GplHEkcHvDQtiicn2rq-lyikQ==";
-        private const string BUCKET = "TEST_DATA";
-        private const string ORG = "TEST_ORG";
+        public InfluxdbController(IOptions<GeneralDbSettings> GeneralDbSettings, IOptions<InfluxDbSettings> influxDbSettings) : base(GeneralDbSettings, influxDbSettings)
+        {
+        }
+
         // GET: InfluxdbController
         public ActionResult Index()
         {
@@ -22,7 +26,7 @@ namespace DB_Controller.Controllers
 
         private void uploadData(string path)
         {
-            using var client = new InfluxDBClient("http://localhost:8086", TOKEN);
+            using var client = new InfluxDBClient("http://localhost:8086", _influxDbSettings.Token);
 
             using (var writeApi = client.GetWriteApi())
             {
@@ -31,7 +35,7 @@ namespace DB_Controller.Controllers
                     while (!reader.EndOfStream)
                     {
                         var record = reader.ReadLine();
-                        writeApi.WriteRecord(record, WritePrecision.S, BUCKET, ORG);
+                        writeApi.WriteRecord(record, WritePrecision.S, _influxDbSettings.Bucket, _influxDbSettings.Org);
                     }
                 }
             }
@@ -70,13 +74,13 @@ namespace DB_Controller.Controllers
         {
             if (ModelState.IsValid)
             {
-                using var client = new InfluxDBClient("http://localhost:8086", TOKEN);
+                using var client = new InfluxDBClient("http://localhost:8086", _influxDbSettings.Token);
 
                 try
                 {
                     var deleteApi = client.GetDeleteApi();
 
-                    await deleteApi.Delete(viewModel.StartDate, viewModel.EndDate, "_measurement=TEST_DATA", BUCKET, ORG);
+                    await deleteApi.Delete(viewModel.StartDate, viewModel.EndDate, "_measurement=TEST_DATA", _influxDbSettings.Bucket, _influxDbSettings.Org);
                 }
                 catch (Exception ex)
                 {
@@ -116,11 +120,11 @@ namespace DB_Controller.Controllers
                 viewModel.EndDate = DateTime.Now.AddDays(1);
             }
 
-            using var client = new InfluxDBClient("http://localhost:8086", TOKEN);
+            using var client = new InfluxDBClient("http://localhost:8086", _influxDbSettings.Token);
 
             string start = viewModel.StartDate.ToString("yyyy-MM-ddTHH:mm:ssZ");
             string end = viewModel.EndDate.ToString("yyyy-MM-ddTHH:mm:ssZ");
-            string flux = "from(bucket:\""+ BUCKET + "\") |> range(start: " + start + ", stop: " + end + ") |> filter(fn: (r) => r._measurement == \"TEST_DATA\")";
+            string flux = "from(bucket:\""+ _influxDbSettings.Bucket + "\") |> range(start: " + start + ", stop: " + end + ") |> filter(fn: (r) => r._measurement == \"TEST_DATA\")";
 
             if (viewModel.Author != null && viewModel.Author != "")
             {
@@ -144,7 +148,7 @@ namespace DB_Controller.Controllers
             }
             //var flux = "from(bucket:\"Test\") |> range(start: " + start + ")";
 
-            var fluxTables = await client.GetQueryApi().QueryAsync(flux, ORG);
+            var fluxTables = await client.GetQueryApi().QueryAsync(flux, _influxDbSettings.Org);
 
             var records = fluxTables.ToList();
             ViewBag.records = records;
@@ -162,11 +166,11 @@ namespace DB_Controller.Controllers
                 viewModel.EndDate = DateTime.Now.AddDays(1);
             }
 
-            using var client = new InfluxDBClient("http://localhost:8086", TOKEN);
+            using var client = new InfluxDBClient("http://localhost:8086", _influxDbSettings.Token);
 
             string start = viewModel.StartDate.ToString("yyyy-MM-ddTHH:mm:ssZ");
             string end = viewModel.EndDate.ToString("yyyy-MM-ddTHH:mm:ssZ");
-            string flux = "from(bucket:\"" + BUCKET + "\") |> range(start: " + start + ", stop: " + end + ") |> filter(fn: (r) => r._measurement == \"TEST_DATA\")";
+            string flux = "from(bucket:\"" + _influxDbSettings.Bucket + "\") |> range(start: " + start + ", stop: " + end + ") |> filter(fn: (r) => r._measurement == \"TEST_DATA\")";
 
             if (viewModel.Author != null || viewModel.D1 != null || viewModel.D2 != null || viewModel.D3 != null || viewModel.D4 != null)
             {
@@ -224,7 +228,7 @@ namespace DB_Controller.Controllers
 
             }
 
-            var fluxTables = await client.GetQueryApi().QueryAsync(flux, ORG);
+            var fluxTables = await client.GetQueryApi().QueryAsync(flux, _influxDbSettings.Org);
 
             var records = fluxTables.ToList();
             ViewBag.records = records;
