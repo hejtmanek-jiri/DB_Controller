@@ -94,10 +94,17 @@ namespace DB_Controller.Controllers
 
             }
 
-            var fluxTables = await client.GetQueryApi().QueryAsync(flux, _influxDbSettings.Org);
-
-            var records = fluxTables.ToList();
-            ViewBag.records = records;
+            try
+            {
+                var fluxTables = await client.GetQueryApi().QueryAsync(flux, _influxDbSettings.Org);
+            
+                var records = fluxTables.ToList();
+                ViewBag.records = records;
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
 
             return View(viewModel);
         }
