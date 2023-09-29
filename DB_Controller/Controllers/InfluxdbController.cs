@@ -13,7 +13,7 @@ namespace DB_Controller.Controllers
     [Obsolete("This controller is deprecated and should not be used!")]
     public class InfluxdbController : DbController
     {
-        public InfluxdbController(IOptions<GeneralDbSettings> GeneralDbSettings, IOptions<InfluxDbSettings> influxDbSettings) : base(GeneralDbSettings, influxDbSettings)
+        public InfluxdbController(IOptions<GeneralDbSettings> GeneralDbSettings, IOptions<InfluxDbSettings> influxDbSettings, IOptions<TimescaleDbSettings> TimescaleDbSettings) : base(GeneralDbSettings, influxDbSettings, TimescaleDbSettings)
         {
         }
 

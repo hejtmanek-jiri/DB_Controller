@@ -3,17 +3,19 @@ using DB_Controller.Models;
 using InfluxDB.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Npgsql;
 
 namespace DB_Controller.Controllers
 {
     public class ReadController : DbController
     {
-        public ReadController(IOptions<GeneralDbSettings> GeneralDbSettings, IOptions<InfluxDbSettings> influxDbSettings) : base(GeneralDbSettings, influxDbSettings)
+        public ReadController(IOptions<GeneralDbSettings> GeneralDbSettings, IOptions<InfluxDbSettings> influxDbSettings, IOptions<TimescaleDbSettings> TimescaleDbSettings) : base(GeneralDbSettings, influxDbSettings, TimescaleDbSettings)
         {
         }
 
         [Route("read")]
         public async Task<IActionResult> ReadData(DateTimeFormViewModel viewModel)
+        
         {
             if (_generalDbSettings.UsedDatabase == INFLUX_DB)
             {
@@ -111,6 +113,22 @@ namespace DB_Controller.Controllers
 
         private IActionResult ReadDataTimescaleDb(DateTimeFormViewModel viewModel)
         {
+            using (NpgsqlConnection connection = new NpgsqlConnection(_timescaleDbSettings.ConnectionString))
+            {
+                connection.Open();
+
+                // Vytvoření a provedení SQL dotazu
+                using (NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM data", connection))
+                using (NpgsqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        // Zpracování výsledků
+                    }
+                }
+            }
+
+            //TODO změnit na View(viewModel)
             return Problem("TimescaleDb not implemented yet", null, StatusCodes.Status501NotImplemented);
         }
     }

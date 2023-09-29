@@ -1,4 +1,6 @@
 using DB_Controller.DbSettings;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,7 @@ IConfiguration Configuration = new ConfigurationBuilder()
 
 builder.Services.Configure<GeneralDbSettings>(Configuration.GetSection("GeneralDbSettings"));
 builder.Services.Configure<InfluxDbSettings>(Configuration.GetSection("InfluxDbSettings"));
+builder.Services.Configure<TimescaleDbSettings>(Configuration.GetSection("TimescaleDbSettings"));
 
 var app = builder.Build();
 

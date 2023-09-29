@@ -2,7 +2,7 @@
 
     <div class="container mt-5">
         <h2>Date Time Form</h2>
-    <form asp-controller="Influxdb" asp-action="DeleteDataSubmit" method="post">
+    <form asp-controller="Delete" asp-action="DeleteDataSubmit" method="post">
             <div class="form-group">
                 <label for="startDate">Start Date:</label>
                 <input type="datetime-local" class="form-control" id="startDate" name="StartDate" value="@Model.StartDate.ToString("yyyy-MM-ddTHH:mm")" required />

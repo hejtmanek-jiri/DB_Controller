@@ -22,7 +22,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - /data/timescaledb:/var/lib/postgresql/data
+      - ./timescaleDB_init:/docker-entrypoint-initdb.d
     ports:
       - 5432:5432
     restart: unless-stopped
