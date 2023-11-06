@@ -1,10 +1,7 @@
-﻿using InfluxDB.Client.Core;
-
-namespace DB_Controller.Models
+﻿namespace DB_Controller.Models
 {
-    public class Data
+    public class DataTimescale
     {
-        public string? Measurement { get; set; }
         public string D1 { get; set; }
 
         public string D2 { get; set; }
@@ -15,10 +12,10 @@ namespace DB_Controller.Models
 
         public string Author { get; set; }
 
-        public double Value { get; set; }
+        public decimal Value { get; set; }
 
         public double Corrected_value { get; set; }
-        public long Timestamp { get; set; }
 
+        public new DateTime Timestamp { get; set;} 
     }
 }

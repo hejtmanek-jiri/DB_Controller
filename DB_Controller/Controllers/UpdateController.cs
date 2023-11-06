@@ -59,7 +59,8 @@ namespace DB_Controller.Controllers
 
             var records = csv.GetRecords<Data>();
 
-            using var writeApi = client.GetWriteApi();
+            var writeApi = client.GetWriteApiAsync();
+
             var batch = new List<PointData>();
 
             foreach (var record in records)
@@ -76,9 +77,9 @@ namespace DB_Controller.Controllers
                 
                 batch.Add(point);
 
-                if (batch.Count >= 5000)
+                if (batch.Count >= BATCH_SIZE)
                 {
-                    writeApi.WritePoints(batch, _influxDbSettings.Bucket, _influxDbSettings.Org);
+                    writeApi.WritePointsAsync(batch, _influxDbSettings.Bucket, _influxDbSettings.Org);
                     batch.Clear();
                 }
 
@@ -88,7 +89,7 @@ namespace DB_Controller.Controllers
             if (batch.Count > 0)
             {
                 try { 
-                    writeApi.WritePoints(batch, _influxDbSettings.Bucket, _influxDbSettings.Org);
+                    writeApi.WritePointsAsync(batch, _influxDbSettings.Bucket, _influxDbSettings.Org);
                 }
                 catch (Exception ex)
                 {
