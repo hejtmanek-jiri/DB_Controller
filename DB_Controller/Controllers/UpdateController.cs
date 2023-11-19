@@ -11,6 +11,8 @@ using DB_Controller.Models;
 using System.Globalization;
 using InfluxDB.Client.Writes;
 using InfluxDB.Client.Core;
+using Npgsql;
+using System.Text;
 
 namespace DB_Controller.Controllers
 {
@@ -22,14 +24,14 @@ namespace DB_Controller.Controllers
         }
 
         [Route("update")]
-        public IActionResult UpdateData()
+        public async Task<IActionResult> UpdateData()
         {
             if (_generalDbSettings.UsedDatabase == INFLUX_DB)
             {
                 return UpdateDataInfluxDb();
             }
 
-            return UpdateDataTimescaleDb();
+            return await UpdateDataTimescaleDb();
         }
 
         public IActionResult UpdateDataInfluxDb()
@@ -59,7 +61,8 @@ namespace DB_Controller.Controllers
 
             var records = csv.GetRecords<Data>();
 
-            using var writeApi = client.GetWriteApi();
+            var writeApi = client.GetWriteApiAsync();
+
             var batch = new List<PointData>();
 
             foreach (var record in records)
@@ -76,32 +79,99 @@ namespace DB_Controller.Controllers
                 
                 batch.Add(point);
 
-                if (batch.Count >= 5000)
+                if (batch.Count >= BATCH_SIZE)
                 {
-                    writeApi.WritePoints(batch, _influxDbSettings.Bucket, _influxDbSettings.Org);
+                    writeApi.WritePointsAsync(batch, _influxDbSettings.Bucket, _influxDbSettings.Org);
                     batch.Clear();
                 }
-
-               
             }
             
             if (batch.Count > 0)
             {
                 try { 
-                    writeApi.WritePoints(batch, _influxDbSettings.Bucket, _influxDbSettings.Org);
+                    writeApi.WritePointsAsync(batch, _influxDbSettings.Bucket, _influxDbSettings.Org);
                 }
                 catch (Exception ex)
                 {
                     throw ex;
                 }
             }
-            
-
         }
 
-        public IActionResult UpdateDataTimescaleDb()
+        public async Task<IActionResult> UpdateDataTimescaleDb()
         {
-            return Problem("TimescaleDb not implemented yet", null, StatusCodes.Status501NotImplemented);
+            using var streamReader = new StreamReader("C:\\BC\\data\\data_timescale_update.csv");
+
+            var config = new CsvHelper.Configuration.CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                MissingFieldFound = null
+            };
+            var csv = new CsvReader(streamReader, config);
+
+            var batchSize = 5000;
+            var batch = new List<DataTimescale>(batchSize);
+
+            foreach (var record in csv.GetRecords<DataTimescale>())
+            {
+                batch.Add(record);
+
+                if (batch.Count == batchSize)
+                {
+                    UpdateBatch(batch);
+                    batch.Clear();
+                }
+            }
+
+            if (batch.Count > 0)
+            {
+                UpdateBatch(batch);
+            }
+
+            async void UpdateBatch(List<DataTimescale> batch)
+            {
+                using (NpgsqlConnection connection = new NpgsqlConnection(_timescaleDbSettings.ConnectionString))
+                {
+                    connection.Open();
+
+                    using var transaction = connection.BeginTransaction();
+                    using var command = new NpgsqlCommand();
+                    command.Connection = connection;
+
+                    foreach (var record in batch)
+                    {
+                        using (var cmd = new NpgsqlCommand())
+                        {
+                            cmd.Connection = connection;
+                            cmd.Transaction = transaction;
+                            cmd.CommandText = @"
+                            UPDATE data 
+                            SET corrected_value = @correctedValue 
+                            WHERE time = @timestamp 
+                            AND author = @author 
+                            AND d1 = @d1 
+                            AND d2 = @d2 
+                            AND d3 = @d3 
+                            AND d4 = @d4";
+
+                            cmd.Parameters.AddWithValue("@correctedValue", record.Corrected_value);
+                            cmd.Parameters.AddWithValue("@timestamp", record.Timestamp);
+                            cmd.Parameters.AddWithValue("@author", record.Author);
+                            cmd.Parameters.AddWithValue("@d1", record.D1);
+                            cmd.Parameters.AddWithValue("@d2", record.D2);
+                            cmd.Parameters.AddWithValue("@d3", record.D3);
+                            cmd.Parameters.AddWithValue("@d4", record.D4);
+
+                            await cmd.ExecuteNonQueryAsync();
+                        }
+                    }
+
+                    transaction.Commit();
+                }
+            }
+
+            TempData["success"] = "Data successfully upadted!";
+
+            return View("index");
         }
     }
 }

@@ -3,6 +3,8 @@ using DB_Controller.Models;
 using InfluxDB.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Npgsql;
+using System.Security.Cryptography;
 
 namespace DB_Controller.Controllers
 {
@@ -33,7 +35,7 @@ namespace DB_Controller.Controllers
                 return await DeleteDataInfluxDb(viewModel);
             }
 
-            return DeleteDataTimescaleDb();
+            return await DeleteDataTimescaleDb(viewModel);
         }
 
         public async Task<IActionResult> DeleteDataInfluxDb(DateTimeFormViewModel viewModel)
@@ -61,9 +63,35 @@ namespace DB_Controller.Controllers
             return View("Index", viewModel);
         }
 
-        public IActionResult DeleteDataTimescaleDb()
+        public async Task<IActionResult> DeleteDataTimescaleDb(DateTimeFormViewModel viewModel)
         {
-            return Problem("TimescaleDb not implemented yet", null, StatusCodes.Status501NotImplemented);
+            using (NpgsqlConnection connection = new NpgsqlConnection(_timescaleDbSettings.ConnectionString))
+            {
+                connection.Open();
+
+                // Vytvoření a provedení SQL dotazu
+                using (var command = new NpgsqlCommand())
+                {
+                    command.Connection = connection;
+
+                    command.CommandText = "DELETE FROM data WHERE time >= @StartDate AND time <= @EndDate";
+
+                    command.Parameters.AddWithValue("@StartDate", viewModel.StartDate);
+                    command.Parameters.AddWithValue("@EndDate", viewModel.EndDate);
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                        TempData["success"] = "Data successfully deleted!";
+                    }
+                    catch (Exception ex)
+                    {
+                        return Ok(ex.Message);
+                    }
+                }
+            }
+
+            return View("Index", viewModel);
         }
     }
 }

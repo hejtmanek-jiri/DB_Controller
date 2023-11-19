@@ -14,3 +14,15 @@
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
+
+<script>
+    $(document).ready(function () {
+
+    @if (TempData.ContainsKey("success"))
+    {
+        var message = TempData["success"];
+        var messageType = "success";
+        <text>showPopUpMessage("@message", "@messageType"); </text>
+    }
+    });
+</script>

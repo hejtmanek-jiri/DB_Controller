@@ -1,7 +1,9 @@
-﻿@model DateTimeFormViewModel
+﻿@using DB_Controller.Controllers;
+@model DateTimeFormViewModel
 @{
     ViewData["Title"] = "InfluxDB Data";
     var records = ViewBag.records;
+    var db = ViewBag.db;
 }
 
 <div class="container mt-5">
@@ -74,6 +76,8 @@
         <table class="table">
             <thead>
                 <tr>
+                    @if (db == DbController.INFLUX_DB)
+                {
                     <td>Result</td>
                     <td>Table</td>
                     <td>Start</td>
@@ -87,21 +91,50 @@
                     <td>D4</td>
                     <td>Field</td>
                     <td>Measurement</td>
+                }
+                else
+                {
+                    <td>Time</td>
+                    <td>Author</td>
+                    <td>D1</td>
+                    <td>D2</td>
+                    <td>D3</td>
+                    <td>D4</td>
+                    <td>Value</td>
+                    <td>Corrected value</td>
+                }
                 </tr>
             </thead>
     
         @foreach (var record in records)
             {
-                @foreach (var test in record.Records)
+                @if (db == DbController.INFLUX_DB)
                 {
-                <tr>
-                    @foreach (var temp in test.Values)
+                    @foreach (var test in record.Records)
                     {
-                        <td>@temp.Value</td>
+                        <tr>
+                            @foreach (var temp in test.Values)
+                            {
+                                <td>@temp.Value</td>
+                            }
+                        </tr>
                     }
-                </tr>
                 }
-            }
+                else
+                {
+                    <tr>
+                        <td>@record.Timestamp</td>
+                        <td>@record.Author</td>
+                        <td>@record.D1</td>
+                        <td>@record.D2</td>
+                        <td>@record.D3</td>
+                        <td>@record.D4</td>
+                        <td>@record.Value</td>
+                        <td>@record.Corrected_value</td>
+                    </tr>
+                }
+
+        }
 
         </table>
     </div>

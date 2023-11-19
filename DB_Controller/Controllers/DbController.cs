@@ -9,8 +9,8 @@ namespace DB_Controller.Controllers
         protected readonly GeneralDbSettings _generalDbSettings;
         protected readonly InfluxDbSettings _influxDbSettings;
         protected readonly TimescaleDbSettings _timescaleDbSettings;
-        protected const string INFLUX_DB = "InfluxDb";
-        protected const string TIMESCALE_DB = "TimescaleDb";
+        public const string INFLUX_DB = "InfluxDb";
+        public const string TIMESCALE_DB = "TimescaleDb";
 
         public DbController(IOptions<GeneralDbSettings> GeneralDbSettings, IOptions<InfluxDbSettings> influxDbSettings, IOptions<TimescaleDbSettings> TimescaleDbSettings)
         {

@@ -2,8 +2,8 @@
 {
     public class DateTimeFormViewModel
     {
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime StartDate { get; set; } = DateTime.Now.AddMonths(-3);
+        public DateTime EndDate { get; set; } = DateTime.Now.AddDays(1);
         public string? Author { get; set; }
         public string? D1 { get; set; }
         public string? D2 { get; set; }

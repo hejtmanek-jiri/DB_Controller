@@ -1,6 +1,7 @@
 ﻿using DB_Controller.DbSettings;
 using DB_Controller.Models;
 using InfluxDB.Client;
+using InfluxDB.Client.Core.Flux.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Npgsql;
@@ -22,18 +23,12 @@ namespace DB_Controller.Controllers
                 return await ReadDataInfluxDb(viewModel);
             }
             
-            return ReadDataTimescaleDb(viewModel);
+            return await ReadDataTimescaleDb(viewModel);
 
         }
 
         private async Task<IActionResult> ReadDataInfluxDb(DateTimeFormViewModel viewModel)
         {
-            if (viewModel.StartDate == DateTime.MinValue && viewModel.EndDate == DateTime.MinValue)
-            {
-                viewModel.StartDate = DateTime.Now.AddMonths(-3);
-                viewModel.EndDate = DateTime.Now.AddDays(1);
-            }
-
             using var client = new InfluxDBClient("http://localhost:8086", _influxDbSettings.Token);
 
             string start = viewModel.StartDate.ToString("yyyy-MM-ddTHH:mm:ssZ");
@@ -102,6 +97,7 @@ namespace DB_Controller.Controllers
             
                 var records = fluxTables.ToList();
                 ViewBag.records = records;
+                ViewBag.db = INFLUX_DB;
             }
             catch (Exception ex)
             {
@@ -111,25 +107,77 @@ namespace DB_Controller.Controllers
             return View(viewModel);
         }
 
-        private IActionResult ReadDataTimescaleDb(DateTimeFormViewModel viewModel)
+        private async Task<IActionResult> ReadDataTimescaleDb(DateTimeFormViewModel viewModel)
         {
+            string sql = "SELECT * FROM data ";
+            sql += "WHERE time >= '" + viewModel.StartDate + "' AND time <= '" + viewModel.EndDate + "' ";
+
+            if (viewModel.Author != null || viewModel.D1 != null || viewModel.D2 != null || viewModel.D3 != null || viewModel.D4 != null)
+            {
+                
+
+                if (viewModel.Author != null && viewModel.Author != "")
+                {
+                    sql += "AND AUTHOR = '" + viewModel.Author +  "' ";
+                }
+                if (viewModel.D1 != null && viewModel.D1 != "")
+                {
+                    sql += viewModel.LogicD1 + " ";
+                    sql += "D1 = '" + viewModel.D1 + "' ";
+                }
+                if (viewModel.D2 != null && viewModel.D2 != "")
+                {
+                    sql += viewModel.LogicD2 + " ";
+                    sql += "D2 = '" + viewModel.D2 + "' ";
+                }
+                if (viewModel.D3 != null && viewModel.D3 != "")
+                {
+                    sql += viewModel.LogicD3 + " ";
+                    sql += "D3 = '" + viewModel.D3 + "' ";
+                }
+                if (viewModel.D4 != null && viewModel.D4 != "")
+                {
+                    sql += viewModel.LogicD4 + " ";
+                    sql += "D4 = '" + viewModel.D4 + "' ";
+                }
+
+                sql += " ORDER BY time ASC";
+
+            }
+
+            var resultList = new List<DataTimescale>();
+
             using (NpgsqlConnection connection = new NpgsqlConnection(_timescaleDbSettings.ConnectionString))
             {
                 connection.Open();
 
                 // Vytvoření a provedení SQL dotazu
-                using (NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM data", connection))
-                using (NpgsqlDataReader reader = command.ExecuteReader())
+                using (var command = new NpgsqlCommand(sql, connection))
+                using (var reader = await command.ExecuteReaderAsync())
                 {
-                    while (reader.Read())
+                    while (await reader.ReadAsync())
                     {
-                        // Zpracování výsledků
+                        resultList.Add(new DataTimescale
+                        {
+                            D1 = reader.IsDBNull(reader.GetOrdinal("d1")) ? null : reader.GetString(reader.GetOrdinal("d1")),
+                            D2 = reader.IsDBNull(reader.GetOrdinal("d2")) ? null : reader.GetString(reader.GetOrdinal("d2")),
+                            D3 = reader.IsDBNull(reader.GetOrdinal("d3")) ? null : reader.GetString(reader.GetOrdinal("d3")),
+                            D4 = reader.IsDBNull(reader.GetOrdinal("d4")) ? null : reader.GetString(reader.GetOrdinal("d4")),
+                            Author = reader.IsDBNull(reader.GetOrdinal("author")) ? null : reader.GetString(reader.GetOrdinal("author")),
+                            Value = reader.GetDouble(reader.GetOrdinal("value")),
+                            Corrected_value = reader.GetDouble(reader.GetOrdinal("corrected_value")),
+                            Timestamp = reader.GetDateTime(reader.GetOrdinal("time"))
+                        });
                     }
                 }
+
+                ViewBag.records = resultList;
+                ViewBag.db = TIMESCALE_DB;
+                TempData["success"] = "Data loaded!";
             }
 
             //TODO změnit na View(viewModel)
-            return Problem("TimescaleDb not implemented yet", null, StatusCodes.Status501NotImplemented);
+            return View(viewModel);
         }
     }
 }

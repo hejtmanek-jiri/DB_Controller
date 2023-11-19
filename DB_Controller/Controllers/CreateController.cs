@@ -4,6 +4,11 @@ using InfluxDB.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.IO;
+using Npgsql;
+using CsvHelper;
+using DB_Controller.Models;
+using System.Globalization;
+using System.Text;
 
 namespace DB_Controller.Controllers
 {
@@ -54,7 +59,80 @@ namespace DB_Controller.Controllers
 
         private IActionResult CreateDataTimescaleDb()
         {
-            return Problem("TimescaleDb not implemented yet", null, StatusCodes.Status501NotImplemented);
+            using var streamReader = new StreamReader("C:\\BC\\data\\data_timescale.csv");
+
+            var config = new CsvHelper.Configuration.CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                MissingFieldFound = null
+            };
+            var csv = new CsvReader(streamReader, config);
+
+            var batchSize = 5000; // Příklad velikosti dávky. Můžete upravit podle potřeby.
+            var batch = new List<DataTimescale>(batchSize);
+
+            foreach (var record in csv.GetRecords<DataTimescale>())
+            {
+                if (record.D1 == "IEVJ" && record.Value.Equals(203.0405227926475))
+                {
+
+                }
+
+                batch.Add(record);
+
+                if (batch.Count == batchSize)
+                {
+                    InsertBatch(batch);
+                    batch.Clear();
+                }
+            }
+
+            if (batch.Count > 0)
+            {
+                InsertBatch(batch);
+            }
+
+            void InsertBatch(List<DataTimescale> batch)
+            {
+                using (NpgsqlConnection connection = new NpgsqlConnection(_timescaleDbSettings.ConnectionString))
+                {
+                    connection.Open();
+
+                    using var transaction = connection.BeginTransaction();
+                    using var command = new NpgsqlCommand();
+                    command.Connection = connection;
+
+                    var sb = new StringBuilder();
+                    sb.Append("INSERT INTO data (time, d1, d2, d3, d4, author, value, corrected_value) VALUES ");
+
+                    var parameters = new List<NpgsqlParameter>();
+                    for (int i = 0; i < batch.Count; i++)
+                    {
+                        var record = batch[i];
+                        sb.AppendFormat(CultureInfo.InvariantCulture, "( @p{0}_time, @p{0}_d1, @p{0}_d2, @p{0}_d3, @p{0}_d4, @p{0}_author, @p{0}_value, @p{0}_corrected_value ),", i);
+
+                        parameters.Add(new NpgsqlParameter($"p{i}_time", record.Timestamp));
+                        parameters.Add(new NpgsqlParameter($"p{i}_d1", record.D1));
+                        parameters.Add(new NpgsqlParameter($"p{i}_d2", record.D2));
+                        parameters.Add(new NpgsqlParameter($"p{i}_d3", record.D3));
+                        parameters.Add(new NpgsqlParameter($"p{i}_d4", record.D4));
+                        parameters.Add(new NpgsqlParameter($"p{i}_author", record.Author));
+                        parameters.Add(new NpgsqlParameter($"p{i}_value", record.Value));
+                        parameters.Add(new NpgsqlParameter($"p{i}_corrected_value", record.Corrected_value));
+                    }
+
+                    sb.Length--; // Odstranit poslední čárku
+                    command.CommandText = sb.ToString();
+                    command.Parameters.AddRange(parameters.ToArray());
+
+                    command.ExecuteNonQuery();
+
+                    transaction.Commit();
+                }
+            }
+
+            TempData["success"] = "Data successfully added!";
+
+            return View("index");
         }
     }
 }

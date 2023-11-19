@@ -4,7 +4,7 @@ namespace DB_Controller.Models
 {
     public class Data
     {
-        public string Measurement { get; set; }
+        public string? Measurement { get; set; }
         public string D1 { get; set; }
 
         public string D2 { get; set; }
