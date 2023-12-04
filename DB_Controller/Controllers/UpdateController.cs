@@ -24,21 +24,22 @@ namespace DB_Controller.Controllers
         }
 
         [Route("update")]
-        public async Task<IActionResult> UpdateData()
+        public IActionResult UpdateData()
         {
             if (_generalDbSettings.UsedDatabase == INFLUX_DB)
             {
                 return UpdateDataInfluxDb();
             }
 
-            return await UpdateDataTimescaleDb();
+            return UpdateDataTimescaleDb();
         }
 
         public IActionResult UpdateDataInfluxDb()
         {
-            try { 
+            try
+            {
                 //zmenit cestu na CSV kde jsou data na update
-                uploadData("C:\\BC\\data\\data.csv");
+                uploadData("C:\\BC\\data\\data_influx_update.csv");
             }
             catch (Exception ex)
             {
@@ -56,7 +57,7 @@ namespace DB_Controller.Controllers
         {
             using var client = new InfluxDBClient("http://localhost:8086", _influxDbSettings.Token);
 
-            using var reader = new StreamReader("C:\\BC\\data\\data.csv");
+            using var reader = new StreamReader(path);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
             var records = csv.GetRecords<Data>();
@@ -72,11 +73,11 @@ namespace DB_Controller.Controllers
                                      .Tag("D2", record.D2)
                                      .Tag("D3", record.D3)
                                      .Tag("D4", record.D4)
-                                     .Tag("Author", record.Author)
+                                     .Field("Author", record.Author)
                                      .Field("Value", record.Value)
                                      .Field("Corrected_value", record.Corrected_value)
                                      .Timestamp(record.Timestamp, WritePrecision.S);
-                
+
                 batch.Add(point);
 
                 if (batch.Count >= BATCH_SIZE)
@@ -85,10 +86,11 @@ namespace DB_Controller.Controllers
                     batch.Clear();
                 }
             }
-            
+
             if (batch.Count > 0)
             {
-                try { 
+                try
+                {
                     writeApi.WritePointsAsync(batch, _influxDbSettings.Bucket, _influxDbSettings.Org);
                 }
                 catch (Exception ex)
@@ -98,7 +100,7 @@ namespace DB_Controller.Controllers
             }
         }
 
-        public async Task<IActionResult> UpdateDataTimescaleDb()
+        public IActionResult UpdateDataTimescaleDb()
         {
             using var streamReader = new StreamReader("C:\\BC\\data\\data_timescale_update.csv");
 
@@ -127,51 +129,52 @@ namespace DB_Controller.Controllers
                 UpdateBatch(batch);
             }
 
-            async void UpdateBatch(List<DataTimescale> batch)
-            {
-                using (NpgsqlConnection connection = new NpgsqlConnection(_timescaleDbSettings.ConnectionString))
-                {
-                    connection.Open();
-
-                    using var transaction = connection.BeginTransaction();
-                    using var command = new NpgsqlCommand();
-                    command.Connection = connection;
-
-                    foreach (var record in batch)
-                    {
-                        using (var cmd = new NpgsqlCommand())
-                        {
-                            cmd.Connection = connection;
-                            cmd.Transaction = transaction;
-                            cmd.CommandText = @"
-                            UPDATE data 
-                            SET corrected_value = @correctedValue 
-                            WHERE time = @timestamp 
-                            AND author = @author 
-                            AND d1 = @d1 
-                            AND d2 = @d2 
-                            AND d3 = @d3 
-                            AND d4 = @d4";
-
-                            cmd.Parameters.AddWithValue("@correctedValue", record.Corrected_value);
-                            cmd.Parameters.AddWithValue("@timestamp", record.Timestamp);
-                            cmd.Parameters.AddWithValue("@author", record.Author);
-                            cmd.Parameters.AddWithValue("@d1", record.D1);
-                            cmd.Parameters.AddWithValue("@d2", record.D2);
-                            cmd.Parameters.AddWithValue("@d3", record.D3);
-                            cmd.Parameters.AddWithValue("@d4", record.D4);
-
-                            await cmd.ExecuteNonQueryAsync();
-                        }
-                    }
-
-                    transaction.Commit();
-                }
-            }
-
             TempData["success"] = "Data successfully upadted!";
 
             return View("index");
+        }
+
+        private void UpdateBatch(List<DataTimescale> batch)
+        {
+            using (NpgsqlConnection connection = new NpgsqlConnection(_timescaleDbSettings.ConnectionString))
+            {
+                connection.Open();
+
+                using var transaction = connection.BeginTransaction();
+                using var command = new NpgsqlCommand();
+                command.Connection = connection;
+
+                foreach (var record in batch)
+                {
+                    using (var cmd = new NpgsqlCommand())
+                    {
+                        cmd.Connection = connection;
+                        cmd.Transaction = transaction;
+                        cmd.CommandText = @"
+                            UPDATE data 
+                            SET value = @value, corrected_value = @correctedValue
+                            WHERE time = @timestamp 
+                            AND d1 = @d1 
+                            AND d2 = @d2 
+                            AND d3 = @d3 
+                            AND d4 = @d4
+                            AND author = @author ";
+
+                        cmd.Parameters.AddWithValue("@value", record.Value);
+                        cmd.Parameters.AddWithValue("@correctedValue", record.Corrected_value);
+                        cmd.Parameters.AddWithValue("@timestamp", record.Timestamp);
+                        cmd.Parameters.AddWithValue("@author", record.Author);
+                        cmd.Parameters.AddWithValue("@d1", record.D1);
+                        cmd.Parameters.AddWithValue("@d2", record.D2);
+                        cmd.Parameters.AddWithValue("@d3", record.D3);
+                        cmd.Parameters.AddWithValue("@d4", record.D4);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                transaction.Commit();
+            }
         }
     }
 }

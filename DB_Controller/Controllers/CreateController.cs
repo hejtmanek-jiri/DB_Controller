@@ -35,7 +35,7 @@ namespace DB_Controller.Controllers
 
             using (var writeApi = client.GetWriteApi())
             {
-                using (var reader = new StreamReader("C:\\BC\\data\\data.csv", System.Text.Encoding.UTF8))
+                using (var reader = new StreamReader("C:\\BC\\data\\data_influx.csv", System.Text.Encoding.UTF8))
                 {
                     try 
                     { 

@@ -110,7 +110,7 @@ namespace DB_Controller.Controllers
         private async Task<IActionResult> ReadDataTimescaleDb(DateTimeFormViewModel viewModel)
         {
             string sql = "SELECT * FROM data ";
-            sql += "WHERE time >= '" + viewModel.StartDate + "' AND time <= '" + viewModel.EndDate + "' ";
+            sql += "WHERE time >= '" + viewModel.StartDate.ToString("MM.dd.yyyy hh:mm:ss") + "' AND time <= '" + viewModel.EndDate.ToString("MM.dd.yyyy hh:mm:ss") + "' ";
 
             if (viewModel.Author != null || viewModel.D1 != null || viewModel.D2 != null || viewModel.D3 != null || viewModel.D4 != null)
             {
