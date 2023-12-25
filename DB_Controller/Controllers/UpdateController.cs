@@ -55,14 +55,21 @@ namespace DB_Controller.Controllers
 
         private void uploadData(string path)
         {
-            using var client = new InfluxDBClient("http://localhost:8086", _influxDbSettings.Token);
+
+            var options = new InfluxDBClientOptions("http://localhost:8086")
+            {
+                Token = _influxDbSettings.Token,
+                Timeout = System.TimeSpan.FromHours(1)
+            };
+            using var client = InfluxDBClientFactory.Create(options);
+            //using var client = new InfluxDBClient(, _influxDbSettings.Token);
 
             using var reader = new StreamReader(path);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
             var records = csv.GetRecords<Data>();
 
-            var writeApi = client.GetWriteApiAsync();
+            var writeApi = client.GetWriteApi();
 
             var batch = new List<PointData>();
 
@@ -82,7 +89,7 @@ namespace DB_Controller.Controllers
 
                 if (batch.Count >= BATCH_SIZE)
                 {
-                    writeApi.WritePointsAsync(batch, _influxDbSettings.Bucket, _influxDbSettings.Org);
+                    writeApi.WritePoints(batch, _influxDbSettings.Bucket, _influxDbSettings.Org);
                     batch.Clear();
                 }
             }
@@ -91,7 +98,7 @@ namespace DB_Controller.Controllers
             {
                 try
                 {
-                    writeApi.WritePointsAsync(batch, _influxDbSettings.Bucket, _influxDbSettings.Org);
+                    writeApi.WritePoints(batch, _influxDbSettings.Bucket, _influxDbSettings.Org);
                 }
                 catch (Exception ex)
                 {

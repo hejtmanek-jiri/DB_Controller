@@ -9,11 +9,13 @@ using CsvHelper;
 using DB_Controller.Models;
 using System.Globalization;
 using System.Text;
+using InfluxDB.Client.Writes;
 
 namespace DB_Controller.Controllers
 {
     public class CreateController : DbController
     {
+        const int BATCH_SIZE = 5000;
         public CreateController(IOptions<GeneralDbSettings> GeneralDbSettings, IOptions<InfluxDbSettings> influxDbSettings, IOptions<TimescaleDbSettings> TimescaleDbSettings) : base(GeneralDbSettings, influxDbSettings, TimescaleDbSettings)
         {
         }
@@ -31,24 +33,53 @@ namespace DB_Controller.Controllers
 
         private IActionResult CreateDataInfluxDb()
         {
-            using var client = new InfluxDBClient("http://localhost:8086", _influxDbSettings.Token);
-
-            using (var writeApi = client.GetWriteApi())
+            var options = new InfluxDBClientOptions("http://localhost:8086")
             {
-                using (var reader = new StreamReader("C:\\BC\\data\\data_influx.csv", System.Text.Encoding.UTF8))
+                Token = _influxDbSettings.Token,
+                Timeout = System.TimeSpan.FromHours(1)
+            };
+            using var client = InfluxDBClientFactory.Create(options);
+            //using var client = new InfluxDBClient(, _influxDbSettings.Token);
+
+            using var reader = new StreamReader("C:\\BC\\data\\data_influx.csv");
+            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+            var records = csv.GetRecords<Data>();
+
+            var writeApi = client.GetWriteApi();
+
+            var batch = new List<PointData>();
+
+            foreach (var record in records)
+            {
+                var point = PointData.Measurement(record.Measurement)
+                                     .Tag("D1", record.D1)
+                                     .Tag("D2", record.D2)
+                                     .Tag("D3", record.D3)
+                                     .Tag("D4", record.D4)
+                                     .Field("Author", record.Author)
+                                     .Field("Value", record.Value)
+                                     .Field("Corrected_value", record.Corrected_value)
+                                     .Timestamp(record.Timestamp, WritePrecision.S);
+
+                batch.Add(point);
+
+                if (batch.Count >= BATCH_SIZE)
                 {
-                    try 
-                    { 
-                        while (!reader.EndOfStream)
-                        {
-                            var record = reader.ReadLine();
-                            writeApi.WriteRecord(record, WritePrecision.S, _influxDbSettings.Bucket, _influxDbSettings.Org);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        return Problem(ex.Message, null, StatusCodes.Status400BadRequest);
-                    }
+                    writeApi.WritePoints(batch, _influxDbSettings.Bucket, _influxDbSettings.Org);
+                    batch.Clear();
+                }
+            }
+
+            if (batch.Count > 0)
+            {
+                try
+                {
+                    writeApi.WritePoints(batch, _influxDbSettings.Bucket, _influxDbSettings.Org);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
                 }
             }
 

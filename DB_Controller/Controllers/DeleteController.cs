@@ -35,20 +35,25 @@ namespace DB_Controller.Controllers
                 return await DeleteDataInfluxDb(viewModel);
             }
 
-            return await DeleteDataTimescaleDb(viewModel);
+            return DeleteDataTimescaleDb(viewModel);
         }
 
         public async Task<IActionResult> DeleteDataInfluxDb(DateTimeFormViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                using var client = new InfluxDBClient("http://localhost:8086", _influxDbSettings.Token);
+                var options = new InfluxDBClientOptions("http://localhost:8086")
+                {
+                    Token = _influxDbSettings.Token,
+                    Timeout = System.TimeSpan.FromHours(1)
+                };
+                using var client = new InfluxDBClient(options);
 
                 try
                 {
                     var deleteApi = client.GetDeleteApi();
 
-                    await deleteApi.Delete(viewModel.StartDate, viewModel.EndDate, "_measurement=TEST_DATA", _influxDbSettings.Bucket, _influxDbSettings.Org);
+                    Task.WaitAll(deleteApi.Delete(viewModel.StartDate, viewModel.EndDate, "_measurement=TEST_DATA", _influxDbSettings.Bucket, _influxDbSettings.Org));
                 }
                 catch (Exception ex)
                 {
@@ -63,7 +68,7 @@ namespace DB_Controller.Controllers
             return View("Index", viewModel);
         }
 
-        public async Task<IActionResult> DeleteDataTimescaleDb(DateTimeFormViewModel viewModel)
+        public IActionResult DeleteDataTimescaleDb(DateTimeFormViewModel viewModel)
         {
             using (NpgsqlConnection connection = new NpgsqlConnection(_timescaleDbSettings.ConnectionString))
             {
@@ -81,7 +86,7 @@ namespace DB_Controller.Controllers
 
                     try
                     {
-                        await command.ExecuteNonQueryAsync();
+                        command.ExecuteNonQuery();
                         TempData["success"] = "Data successfully deleted!";
                     }
                     catch (Exception ex)

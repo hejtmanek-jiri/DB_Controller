@@ -29,7 +29,12 @@ namespace DB_Controller.Controllers
 
         private async Task<IActionResult> ReadDataInfluxDb(DateTimeFormViewModel viewModel)
         {
-            using var client = new InfluxDBClient("http://localhost:8086", _influxDbSettings.Token);
+            var options = new InfluxDBClientOptions("http://localhost:8086")
+            {
+                Token = _influxDbSettings.Token,
+                Timeout = System.TimeSpan.FromHours(1)
+            };
+            using var client = new InfluxDBClient(options);
 
             string start = viewModel.StartDate.ToString("yyyy-MM-ddTHH:mm:ssZ");
             string end = viewModel.EndDate.ToString("yyyy-MM-ddTHH:mm:ssZ");
@@ -95,7 +100,16 @@ namespace DB_Controller.Controllers
             {
                 var fluxTables = await client.GetQueryApi().QueryAsync(flux, _influxDbSettings.Org);
             
-                var records = fluxTables.ToList();
+                List<FluxTable> records = fluxTables.ToList();
+
+                var count = 0;
+                if (records.Any())
+                {
+                    int sameTagCount = records.FirstOrDefault().Records.Count();
+                    count = records.Count() * sameTagCount;
+                }
+
+                ViewBag.count = count;
                 ViewBag.records = records;
                 ViewBag.db = INFLUX_DB;
             }

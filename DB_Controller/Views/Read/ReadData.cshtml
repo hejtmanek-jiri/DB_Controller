@@ -4,6 +4,7 @@
     ViewData["Title"] = "InfluxDB Data";
     var records = ViewBag.records;
     var db = ViewBag.db;
+    var count = ViewBag.count;
 }
 
 <div class="container mt-5">
@@ -73,6 +74,7 @@
 @if (records != null) {
     <div class="text-center">
         <h1 class="display-4">Influx DB Data</h1>
+        <h2>Radek: @count</h2>
         <table class="table">
             <thead>
                 <tr>
@@ -110,6 +112,7 @@
             {
                 @if (db == DbController.INFLUX_DB)
                 {
+                    
                     @foreach (var test in record.Records)
                     {
                         <tr>
