@@ -1,4 +1,6 @@
-﻿namespace DB_Controller.Models
+﻿using InfluxDB.Client.Core.Flux.Domain;
+
+namespace DB_Controller.Models
 {
     public class DateTimeFormViewModel
     {
@@ -14,5 +16,9 @@
         public string? LogicD3 { get; set; }
         public string? LogicD4 { get; set; }
 
+        public int? Count { get; set; }
+        public List<FluxTable>? RecordsFlux { get; set; }
+        public List<DataTimescale>? RecordsTimescale { get; set; }
+        public string? Db { get; set; }
     }
 }

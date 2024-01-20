@@ -109,9 +109,9 @@ namespace DB_Controller.Controllers
                     count = records.Count() * sameTagCount;
                 }
 
-                ViewBag.count = count;
-                ViewBag.records = records;
-                ViewBag.db = INFLUX_DB;
+                viewModel.RecordsFlux = records;
+                viewModel.Count = count;
+                viewModel.Db = INFLUX_DB;
             }
             catch (Exception ex)
             {
@@ -181,12 +181,12 @@ namespace DB_Controller.Controllers
                             Value = reader.GetDouble(reader.GetOrdinal("value")),
                             Corrected_value = reader.GetDouble(reader.GetOrdinal("corrected_value")),
                             Timestamp = reader.GetDateTime(reader.GetOrdinal("time"))
-                        });
+                        }); 
                     }
                 }
 
-                ViewBag.records = resultList;
-                ViewBag.db = TIMESCALE_DB;
+                viewModel.RecordsTimescale = resultList;
+                viewModel.Db = TIMESCALE_DB;
                 TempData["success"] = "Data loaded!";
             }
 

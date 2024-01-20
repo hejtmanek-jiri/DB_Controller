@@ -2,9 +2,6 @@
 @model DateTimeFormViewModel
 @{
     ViewData["Title"] = "InfluxDB Data";
-    var records = ViewBag.records;
-    var db = ViewBag.db;
-    var count = ViewBag.count;
 }
 
 <div class="container mt-5">
@@ -71,14 +68,14 @@
     </form>
 </div>
 
-@if (records != null) {
+@if (Model.RecordsFlux != null || Model.RecordsTimescale != null) {
     <div class="text-center">
         <h1 class="display-4">Influx DB Data</h1>
-        <h2>Radek: @count</h2>
+        <h2>Radek: @Model.Count</h2>
         <table class="table">
             <thead>
                 <tr>
-                    @if (db == DbController.INFLUX_DB)
+                    @if (Model.Db == DbController.INFLUX_DB)
                 {
                     <td>Result</td>
                     <td>Table</td>
@@ -86,7 +83,6 @@
                     <td>Stop</td>
                     <td>Time</td>
                     <td>Value</td>
-                    <td>Autor</td>
                     <td>D1</td>
                     <td>D2</td>
                     <td>D3</td>
@@ -107,12 +103,12 @@
                 }
                 </tr>
             </thead>
-    
-        @foreach (var record in records)
+
+
+            @if (Model.Db == DbController.INFLUX_DB)
             {
-                @if (db == DbController.INFLUX_DB)
+                @foreach (var record in Model.RecordsFlux) 
                 {
-                    
                     @foreach (var test in record.Records)
                     {
                         <tr>
@@ -123,8 +119,10 @@
                         </tr>
                     }
                 }
-                else
-                {
+            }
+            else
+            {
+                @foreach (var record in Model.RecordsTimescale) {
                     <tr>
                         <td>@record.Timestamp</td>
                         <td>@record.Author</td>
@@ -136,8 +134,7 @@
                         <td>@record.Corrected_value</td>
                     </tr>
                 }
-
-        }
+            }
 
         </table>
     </div>
