@@ -169,6 +169,7 @@ namespace DB_Controller.Controllers
                 using (var command = new NpgsqlCommand(sql, connection))
                 using (var reader = await command.ExecuteReaderAsync())
                 {
+                    command.CommandTimeout = (int)TimeSpan.FromMinutes(60).TotalSeconds;
                     while (await reader.ReadAsync())
                     {
                         resultList.Add(new DataTimescale

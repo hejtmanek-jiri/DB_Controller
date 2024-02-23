@@ -120,67 +120,93 @@ namespace DB_Controller.Controllers
             var batchSize = 5000;
             var batch = new List<DataTimescale>(batchSize);
 
-            foreach (var record in csv.GetRecords<DataTimescale>())
-            {
-                batch.Add(record);
+            //using (NpgsqlConnection connection = new NpgsqlConnection(_timescaleDbSettings.ConnectionString))
+            //{
+                //connection.Open();
 
-                if (batch.Count == batchSize)
+                foreach (var record in csv.GetRecords<DataTimescale>())
+                {
+                    batch.Add(record);
+
+                    if (batch.Count == batchSize)
+                    {
+                        UpdateBatch(batch);
+                        batch.Clear();
+                    }
+                }
+
+
+                if (batch.Count > 0)
                 {
                     UpdateBatch(batch);
-                    batch.Clear();
                 }
-            }
 
-            if (batch.Count > 0)
-            {
-                UpdateBatch(batch);
-            }
+                //connection.Close();
 
-            TempData["success"] = "Data successfully upadted!";
+            //}
+
+
+            TempData["success"] = "Data successfully updated!";
 
             return View("index");
         }
 
-        private void UpdateBatch(List<DataTimescale> batch)
+        private void UpdateBatch(List<DataTimescale> batch)//, NpgsqlConnection connection)
         {
-            using (NpgsqlConnection connection = new NpgsqlConnection(_timescaleDbSettings.ConnectionString))
+
+            using (var conn = new NpgsqlConnection(_timescaleDbSettings.ConnectionString)) 
             {
-                connection.Open();
+                conn.Open();
 
-                using var transaction = connection.BeginTransaction();
-                using var command = new NpgsqlCommand();
-                command.Connection = connection;
+                using (var transaction = conn.BeginTransaction())
+                { 
 
-                foreach (var record in batch)
-                {
-                    using (var cmd = new NpgsqlCommand())
+                    var cmdText = @"
+                        UPDATE data 
+                        SET value = @value, corrected_value = @correctedValue
+                        WHERE time = @timestamp 
+                        AND d1 = @d1 
+                        AND d2 = @d2 
+                        AND d3 = @d3 
+                        AND d4 = @d4
+                        AND author = @author ";
+
+                    using (var command = new NpgsqlCommand())
                     {
-                        cmd.Connection = connection;
-                        cmd.Transaction = transaction;
-                        cmd.CommandText = @"
-                            UPDATE data 
-                            SET value = @value, corrected_value = @correctedValue
-                            WHERE time = @timestamp 
-                            AND d1 = @d1 
-                            AND d2 = @d2 
-                            AND d3 = @d3 
-                            AND d4 = @d4
-                            AND author = @author ";
+                        command.Connection = conn;
+                        command.Transaction = transaction;
+                        command.CommandText = cmdText;
 
-                        cmd.Parameters.AddWithValue("@value", record.Value);
-                        cmd.Parameters.AddWithValue("@correctedValue", record.Corrected_value);
-                        cmd.Parameters.AddWithValue("@timestamp", record.Timestamp);
-                        cmd.Parameters.AddWithValue("@author", record.Author);
-                        cmd.Parameters.AddWithValue("@d1", record.D1);
-                        cmd.Parameters.AddWithValue("@d2", record.D2);
-                        cmd.Parameters.AddWithValue("@d3", record.D3);
-                        cmd.Parameters.AddWithValue("@d4", record.D4);
 
-                        cmd.ExecuteNonQuery();
+                        command.CommandTimeout = (int)TimeSpan.FromMinutes(60).TotalSeconds;
+                        command.Parameters.AddWithValue("value", NpgsqlTypes.NpgsqlDbType.Double);
+                        command.Parameters.AddWithValue("correctedValue", NpgsqlTypes.NpgsqlDbType.Double);
+                        command.Parameters.AddWithValue("timestamp", NpgsqlTypes.NpgsqlDbType.Timestamp);
+                        command.Parameters.AddWithValue("author", NpgsqlTypes.NpgsqlDbType.Varchar);
+                        command.Parameters.AddWithValue("d1", NpgsqlTypes.NpgsqlDbType.Varchar);
+                        command.Parameters.AddWithValue("d2", NpgsqlTypes.NpgsqlDbType.Varchar);
+                        command.Parameters.AddWithValue("d3", NpgsqlTypes.NpgsqlDbType.Varchar);
+                        command.Parameters.AddWithValue("d4", NpgsqlTypes.NpgsqlDbType.Varchar);
+                        foreach (var record in batch)
+                        {
+
+                            command.Parameters["value"].Value = record.Value;
+                            command.Parameters["correctedValue"].Value = record.Corrected_value;
+                            command.Parameters["timestamp"].Value = record.Timestamp;
+                            command.Parameters["author"].Value = record.Author;
+                            command.Parameters["d1"].Value = record.D1;
+                            command.Parameters["d2"].Value = record.D2;
+                            command.Parameters["d3"].Value = record.D3;
+                            command.Parameters["d4"].Value = record.D4;
+
+
+                            command.ExecuteNonQuery();
+                        }
                     }
+                    transaction.Commit();
                 }
 
-                transaction.Commit();
+                conn.Close();
             }
         }
     }

@@ -77,6 +77,7 @@ namespace DB_Controller.Controllers
                 // Vytvoření a provedení SQL dotazu
                 using (var command = new NpgsqlCommand())
                 {
+                    command.CommandTimeout = (int)TimeSpan.FromMinutes(60).TotalSeconds;
                     command.Connection = connection;
 
                     command.CommandText = "DELETE FROM data WHERE time >= @StartDate AND time <= @EndDate";

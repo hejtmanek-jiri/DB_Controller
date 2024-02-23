@@ -130,6 +130,7 @@ namespace DB_Controller.Controllers
 
                     using var transaction = connection.BeginTransaction();
                     using var command = new NpgsqlCommand();
+                    command.CommandTimeout = (int)TimeSpan.FromMinutes(60).TotalSeconds;
                     command.Connection = connection;
 
                     var sb = new StringBuilder();
