@@ -162,6 +162,7 @@ namespace DB_Controller.Controllers
                 { 
 
                     var cmdText = @"
+                        EXPLAIN ANALYZE
                         UPDATE data 
                         SET value = @value, corrected_value = @correctedValue
                         WHERE time = @timestamp 
@@ -175,32 +176,29 @@ namespace DB_Controller.Controllers
                     {
                         command.Connection = conn;
                         command.Transaction = transaction;
-                        command.CommandText = cmdText;
-
-
                         command.CommandTimeout = (int)TimeSpan.FromMinutes(60).TotalSeconds;
-                        command.Parameters.AddWithValue("value", NpgsqlTypes.NpgsqlDbType.Double);
-                        command.Parameters.AddWithValue("correctedValue", NpgsqlTypes.NpgsqlDbType.Double);
-                        command.Parameters.AddWithValue("timestamp", NpgsqlTypes.NpgsqlDbType.Timestamp);
-                        command.Parameters.AddWithValue("author", NpgsqlTypes.NpgsqlDbType.Varchar);
-                        command.Parameters.AddWithValue("d1", NpgsqlTypes.NpgsqlDbType.Varchar);
-                        command.Parameters.AddWithValue("d2", NpgsqlTypes.NpgsqlDbType.Varchar);
-                        command.Parameters.AddWithValue("d3", NpgsqlTypes.NpgsqlDbType.Varchar);
-                        command.Parameters.AddWithValue("d4", NpgsqlTypes.NpgsqlDbType.Varchar);
                         foreach (var record in batch)
                         {
-
-                            command.Parameters["value"].Value = record.Value;
-                            command.Parameters["correctedValue"].Value = record.Corrected_value;
-                            command.Parameters["timestamp"].Value = record.Timestamp;
-                            command.Parameters["author"].Value = record.Author;
-                            command.Parameters["d1"].Value = record.D1;
-                            command.Parameters["d2"].Value = record.D2;
-                            command.Parameters["d3"].Value = record.D3;
-                            command.Parameters["d4"].Value = record.D4;
-
+                            command.CommandText = cmdText;
+                            command.Parameters.AddWithValue("@value", record.Value);
+                            command.Parameters.AddWithValue("@correctedValue", record.Corrected_value);
+                            command.Parameters.AddWithValue("@timestamp", record.Timestamp);
+                            command.Parameters.AddWithValue("@author", record.Author);
+                            command.Parameters.AddWithValue("@d1", record.D1);
+                            command.Parameters.AddWithValue("@d2", record.D2);
+                            command.Parameters.AddWithValue("@d3", record.D3);
+                            command.Parameters.AddWithValue("@d4", record.D4);
 
                             command.ExecuteNonQuery();
+
+                            using (var reader = command.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    var test = reader.GetString(0);
+                                    Console.WriteLine(reader.GetString(0)); // Výpis plánu a analýzy
+                                }
+                            }
                         }
                     }
                     transaction.Commit();
