@@ -2,6 +2,7 @@
 {
     public class DataTimescale
     {
+        public long Id { get; set; }
         public string D1 { get; set; }
 
         public string D2 { get; set; }

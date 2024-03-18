@@ -17,7 +17,7 @@ namespace DB_Controller.Models
         public string? LogicD4 { get; set; }
 
         public int? Count { get; set; }
-        public List<FluxTable>? RecordsFlux { get; set; }
+        public List<FluxRecord>? RecordsFlux { get; set; }
         public List<DataTimescale>? RecordsTimescale { get; set; }
         public string? Db { get; set; }
     }

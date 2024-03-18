@@ -13,6 +13,7 @@ using InfluxDB.Client.Writes;
 using InfluxDB.Client.Core;
 using Npgsql;
 using System.Text;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace DB_Controller.Controllers
 {
@@ -113,99 +114,82 @@ namespace DB_Controller.Controllers
 
             var config = new CsvHelper.Configuration.CsvConfiguration(CultureInfo.InvariantCulture)
             {
-                MissingFieldFound = null
+                MissingFieldFound = null,
+                HeaderValidated = null
             };
             var csv = new CsvReader(streamReader, config);
 
             var batchSize = 5000;
             var batch = new List<DataTimescale>(batchSize);
 
-            //using (NpgsqlConnection connection = new NpgsqlConnection(_timescaleDbSettings.ConnectionString))
-            //{
-                //connection.Open();
+            NpgsqlConnection connection = new NpgsqlConnection(_timescaleDbSettings.ConnectionString);
+            connection.Open();
 
-                foreach (var record in csv.GetRecords<DataTimescale>())
+            foreach (var record in csv.GetRecords<DataTimescale>())
+            {
+                batch.Add(record);
+
+                if (batch.Count == batchSize)
                 {
-                    batch.Add(record);
-
-                    if (batch.Count == batchSize)
-                    {
-                        UpdateBatch(batch);
-                        batch.Clear();
-                    }
+                    UpdateBatch(batch, connection);
+                    batch.Clear();
                 }
+            }
 
+            if (batch.Count > 0)
+            {
+                UpdateBatch(batch, connection);
+            }
 
-                if (batch.Count > 0)
-                {
-                    UpdateBatch(batch);
-                }
+            connection.Close();
 
-                //connection.Close();
-
-            //}
-
-
-            TempData["success"] = "Data successfully updated!";
+            TempData["success"] = "Data successfully upadted!";
 
             return View("index");
         }
 
-        private void UpdateBatch(List<DataTimescale> batch)//, NpgsqlConnection connection)
+        private void UpdateBatch(List<DataTimescale> batch, NpgsqlConnection connection)
         {
+            using var transaction = connection.BeginTransaction();
+            using var command = new NpgsqlCommand();
+            command.Connection = connection;
 
-            using (var conn = new NpgsqlConnection(_timescaleDbSettings.ConnectionString)) 
+            foreach (var record in batch)
             {
-                conn.Open();
-
-                using (var transaction = conn.BeginTransaction())
-                { 
-
-                    var cmdText = @"
-                        EXPLAIN ANALYZE
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+                    cmd.Transaction = transaction;
+                    cmd.CommandText = @"
                         UPDATE data 
                         SET value = @value, corrected_value = @correctedValue
-                        WHERE time = @timestamp 
+                        WHERE
+                        id = @id";
+                    /*
+                        AND time = @timestamp 
                         AND d1 = @d1 
                         AND d2 = @d2 
                         AND d3 = @d3 
                         AND d4 = @d4
                         AND author = @author ";
+                    ¨*/
 
-                    using (var command = new NpgsqlCommand())
-                    {
-                        command.Connection = conn;
-                        command.Transaction = transaction;
-                        command.CommandTimeout = (int)TimeSpan.FromMinutes(60).TotalSeconds;
-                        foreach (var record in batch)
-                        {
-                            command.CommandText = cmdText;
-                            command.Parameters.AddWithValue("@value", record.Value);
-                            command.Parameters.AddWithValue("@correctedValue", record.Corrected_value);
-                            command.Parameters.AddWithValue("@timestamp", record.Timestamp);
-                            command.Parameters.AddWithValue("@author", record.Author);
-                            command.Parameters.AddWithValue("@d1", record.D1);
-                            command.Parameters.AddWithValue("@d2", record.D2);
-                            command.Parameters.AddWithValue("@d3", record.D3);
-                            command.Parameters.AddWithValue("@d4", record.D4);
+                    cmd.Parameters.AddWithValue("@id", record.Id);
+                    cmd.Parameters.AddWithValue("@value", record.Value);
+                    cmd.Parameters.AddWithValue("@correctedValue", record.Corrected_value);
+                    /*cmd.Parameters.AddWithValue("@timestamp", record.Timestamp);
+                    cmd.Parameters.AddWithValue("@author", record.Author);
+                    cmd.Parameters.AddWithValue("@d1", record.D1);
+                    cmd.Parameters.AddWithValue("@d2", record.D2);
+                    cmd.Parameters.AddWithValue("@d3", record.D3);
+                    cmd.Parameters.AddWithValue("@d4", record.D4);
+                    */
 
-                            command.ExecuteNonQuery();
-
-                            using (var reader = command.ExecuteReader())
-                            {
-                                while (reader.Read())
-                                {
-                                    var test = reader.GetString(0);
-                                    Console.WriteLine(reader.GetString(0)); // Výpis plánu a analýzy
-                                }
-                            }
-                        }
-                    }
-                    transaction.Commit();
+                    cmd.ExecuteNonQuery();
                 }
-
-                conn.Close();
             }
+
+            transaction.Commit();
         }
     }
 }

@@ -4,7 +4,6 @@ using Microsoft.Extensions.Options;
 
 namespace DB_Controller.Controllers
 {
-    [DB_Controller.Filters.ExceptionFilter]
     public abstract class DbController : Controller
     {
         protected readonly GeneralDbSettings _generalDbSettings;

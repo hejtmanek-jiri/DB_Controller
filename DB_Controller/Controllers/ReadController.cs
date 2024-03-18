@@ -5,6 +5,7 @@ using InfluxDB.Client.Core.Flux.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Npgsql;
+using System.Data;
 
 namespace DB_Controller.Controllers
 {
@@ -100,13 +101,12 @@ namespace DB_Controller.Controllers
             {
                 var fluxTables = await client.GetQueryApi().QueryAsync(flux, _influxDbSettings.Org);
             
-                List<FluxTable> records = fluxTables.ToList();
+                List<FluxRecord> records = fluxTables.SelectMany(x => x.Records).ToList();
 
                 var count = 0;
                 if (records.Any())
                 {
-                    int sameTagCount = records.FirstOrDefault().Records.Count();
-                    count = records.Count() * sameTagCount;
+                    count = records.Count();
                 }
 
                 viewModel.RecordsFlux = records;
@@ -169,11 +169,11 @@ namespace DB_Controller.Controllers
                 using (var command = new NpgsqlCommand(sql, connection))
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    command.CommandTimeout = (int)TimeSpan.FromMinutes(60).TotalSeconds;
                     while (await reader.ReadAsync())
                     {
                         resultList.Add(new DataTimescale
                         {
+                            Id = reader.GetInt64(reader.GetOrdinal("id")),
                             D1 = reader.IsDBNull(reader.GetOrdinal("d1")) ? null : reader.GetString(reader.GetOrdinal("d1")),
                             D2 = reader.IsDBNull(reader.GetOrdinal("d2")) ? null : reader.GetString(reader.GetOrdinal("d2")),
                             D3 = reader.IsDBNull(reader.GetOrdinal("d3")) ? null : reader.GetString(reader.GetOrdinal("d3")),
@@ -187,6 +187,7 @@ namespace DB_Controller.Controllers
                 }
 
                 viewModel.RecordsTimescale = resultList;
+                viewModel.Count = resultList.Count;
                 viewModel.Db = TIMESCALE_DB;
                 TempData["success"] = "Data loaded!";
             }

@@ -83,15 +83,16 @@
                     <td>Stop</td>
                     <td>Time</td>
                     <td>Value</td>
+                    <td>Autor</td>
                     <td>D1</td>
                     <td>D2</td>
                     <td>D3</td>
                     <td>D4</td>
                     <td>Field</td>
-                    <td>Measurement</td>
                 }
                 else
                 {
+                    <td>Id</td>
                     <td>Time</td>
                     <td>Author</td>
                     <td>D1</td>
@@ -109,21 +110,19 @@
             {
                 @foreach (var record in Model.RecordsFlux) 
                 {
-                    @foreach (var test in record.Records)
-                    {
-                        <tr>
-                            @foreach (var temp in test.Values)
-                            {
-                                <td>@temp.Value</td>
-                            }
-                        </tr>
-                    }
+                    <tr>
+                        @foreach (var temp in record.Values)
+                        {
+                            <td>@temp.Value</td>
+                        }
+                    </tr>
                 }
             }
             else
             {
                 @foreach (var record in Model.RecordsTimescale) {
                     <tr>
+                        <td>@record.Id</td>
                         <td>@record.Timestamp</td>
                         <td>@record.Author</td>
                         <td>@record.D1</td>
