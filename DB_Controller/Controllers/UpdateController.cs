@@ -189,7 +189,7 @@ namespace DB_Controller.Controllers
                 }
             }
 
-            transaction.Commit();
+           // transaction.Commit();
         }
     }
 }
