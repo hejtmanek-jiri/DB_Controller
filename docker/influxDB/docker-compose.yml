@@ -1,0 +1,28 @@
+networks:
+    dbcontroller: {}
+services:
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb2
+    networks:
+        - dbcontroller
+    volumes:
+      - ./config:/etc/influxdb2
+      - ./data:/var/lib/influxdb2
+    ports:
+      - 8086:8086
+    restart: unless-stopped
+  timescaledb:
+    image: timescale/timescaledb:latest-pg15
+    container_name: timescaledb
+    networks:
+      - dbcontroller
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./timescaleDB_init:/docker-entrypoint-initdb.d
+    ports:
+      - 5432:5432
+    restart: unless-stopped

@@ -115,11 +115,11 @@ namespace DB_Controller.Controllers
             var config = new CsvHelper.Configuration.CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 MissingFieldFound = null,
-                HeaderValidated = null
+                //HeaderValidated = null
             };
             var csv = new CsvReader(streamReader, config);
 
-            var batchSize = 5000;
+            var batchSize = BATCH_SIZE;
             var batch = new List<DataTimescale>(batchSize);
 
             NpgsqlConnection connection = new NpgsqlConnection(_timescaleDbSettings.ConnectionString);
@@ -150,6 +150,7 @@ namespace DB_Controller.Controllers
 
         private void UpdateBatch(List<DataTimescale> batch, NpgsqlConnection connection)
         {
+            /*
             using var transaction = connection.BeginTransaction();
             using var command = new NpgsqlCommand();
             command.Connection = connection;
@@ -172,7 +173,7 @@ namespace DB_Controller.Controllers
                         AND d3 = @d3 
                         AND d4 = @d4
                         AND author = @author ";
-                    ¨*/
+                    
 
                     cmd.Parameters.AddWithValue("@id", record.Id);
                     cmd.Parameters.AddWithValue("@value", record.Value);
@@ -183,13 +184,42 @@ namespace DB_Controller.Controllers
                     cmd.Parameters.AddWithValue("@d2", record.D2);
                     cmd.Parameters.AddWithValue("@d3", record.D3);
                     cmd.Parameters.AddWithValue("@d4", record.D4);
-                    */
+                   
 
                     cmd.ExecuteNonQuery();
                 }
             }
+            */
 
-           // transaction.Commit();
+            //connection.Open();
+
+            using var transaction = connection.BeginTransaction();
+            using var command = new NpgsqlCommand();
+            command.Connection = connection;
+
+            var sb = new StringBuilder();
+            sb.Append("UPDATE data SET value = upd.value, corrected_value = upd.corrected_value FROM (VALUES ");//(id, time, d1, d2, d3, d4, author, value, corrected_value)
+
+            var parameters = new List<NpgsqlParameter>();
+            for (int i = 0; i < batch.Count; i++)
+            {
+                var record = batch[i];
+                sb.AppendFormat(CultureInfo.InvariantCulture, "(@p{0}_id, @p{0}_value, @p{0}_corrected_value),", i);
+                parameters.Add(new NpgsqlParameter($"p{i}_id", record.Id));
+                parameters.Add(new NpgsqlParameter($"p{i}_value", record.Value));
+                parameters.Add(new NpgsqlParameter($"p{i}_corrected_value", record.Corrected_value));
+            }
+            sb.Length--; // Odstranit poslední čárku
+            sb.AppendFormat(CultureInfo.InvariantCulture, ") AS upd(id, value, corrected_value) WHERE data.id = upd.id");
+            
+            command.CommandText = sb.ToString();
+            command.Parameters.AddRange(parameters.ToArray());
+
+            command.ExecuteNonQuery();
+
+            transaction.Commit();
+
+            // transaction.Commit();
         }
     }
 }
