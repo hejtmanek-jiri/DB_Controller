@@ -129,15 +129,16 @@ namespace DB_Controller.Controllers
                     command.Connection = connection;
 
                     var sb = new StringBuilder();
-                    sb.Append("INSERT INTO data (id, time, d1, d2, d3, d4, author, value, corrected_value) VALUES ");
+                    sb.Append("INSERT INTO data (time, d1, d2, d3, d4, author, value, corrected_value) VALUES ");
 
                     var parameters = new List<NpgsqlParameter>();
                     for (int i = 0; i < batch.Count; i++)
                     {
                         var record = batch[i];
-                        sb.AppendFormat(CultureInfo.InvariantCulture, "(@p{0}_id,  @p{0}_time, @p{0}_d1, @p{0}_d2, @p{0}_d3, @p{0}_d4, @p{0}_author, @p{0}_value, @p{0}_corrected_value ),", i);
+                        //sb.AppendFormat(CultureInfo.InvariantCulture, "(@p{0}_id,  @p{0}_time, @p{0}_d1, @p{0}_d2, @p{0}_d3, @p{0}_d4, @p{0}_author, @p{0}_value, @p{0}_corrected_value ),", i);
+                        sb.AppendFormat(CultureInfo.InvariantCulture, "(@p{0}_time, @p{0}_d1, @p{0}_d2, @p{0}_d3, @p{0}_d4, @p{0}_author, @p{0}_value, @p{0}_corrected_value ),", i);
 
-                        parameters.Add(new NpgsqlParameter($"p{i}_id", record.Id));
+                        //parameters.Add(new NpgsqlParameter($"p{i}_id", record.Id));
                         parameters.Add(new NpgsqlParameter($"p{i}_time", record.Timestamp));
                         parameters.Add(new NpgsqlParameter($"p{i}_d1", record.D1));
                         parameters.Add(new NpgsqlParameter($"p{i}_d2", record.D2));

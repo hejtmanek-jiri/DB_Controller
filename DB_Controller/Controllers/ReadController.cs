@@ -173,7 +173,7 @@ namespace DB_Controller.Controllers
                     {
                         resultList.Add(new DataTimescale
                         {
-                            Id = reader.GetInt64(reader.GetOrdinal("id")),
+                            //Id = reader.GetInt64(reader.GetOrdinal("id")),
                             D1 = reader.IsDBNull(reader.GetOrdinal("d1")) ? null : reader.GetString(reader.GetOrdinal("d1")),
                             D2 = reader.IsDBNull(reader.GetOrdinal("d2")) ? null : reader.GetString(reader.GetOrdinal("d2")),
                             D3 = reader.IsDBNull(reader.GetOrdinal("d3")) ? null : reader.GetString(reader.GetOrdinal("d3")),

@@ -204,13 +204,18 @@ namespace DB_Controller.Controllers
             for (int i = 0; i < batch.Count; i++)
             {
                 var record = batch[i];
-                sb.AppendFormat(CultureInfo.InvariantCulture, "(@p{0}_id, @p{0}_value, @p{0}_corrected_value),", i);
-                parameters.Add(new NpgsqlParameter($"p{i}_id", record.Id));
+                sb.AppendFormat(CultureInfo.InvariantCulture, "(@p{0}_time, @p{0}_d1, @p{0}_d2, @p{0}_d3, @p{0}_d4, @p{0}_value, @p{0}_corrected_value),", i);
+                //parameters.Add(new NpgsqlParameter($"p{i}_id", record.Id));
+                parameters.Add(new NpgsqlParameter($"p{i}_time", record.Timestamp));
+                parameters.Add(new NpgsqlParameter($"p{i}_d1", record.D1));
+                parameters.Add(new NpgsqlParameter($"p{i}_d2", record.D2));
+                parameters.Add(new NpgsqlParameter($"p{i}_d3", record.D3));
+                parameters.Add(new NpgsqlParameter($"p{i}_d4", record.D4));
                 parameters.Add(new NpgsqlParameter($"p{i}_value", record.Value));
                 parameters.Add(new NpgsqlParameter($"p{i}_corrected_value", record.Corrected_value));
             }
             sb.Length--; // Odstranit poslední čárku
-            sb.AppendFormat(CultureInfo.InvariantCulture, ") AS upd(id, value, corrected_value) WHERE data.id = upd.id");
+            sb.AppendFormat(CultureInfo.InvariantCulture, ") AS upd(time, d1, d2, d3, d4, value, corrected_value) WHERE data.time = upd.time AND data.d1 = upd.d1 AND data.d2 = upd.d2 AND data.d3 = upd.d3 AND data.d4 = upd.d4");
             
             command.CommandText = sb.ToString();
             command.Parameters.AddRange(parameters.ToArray());
