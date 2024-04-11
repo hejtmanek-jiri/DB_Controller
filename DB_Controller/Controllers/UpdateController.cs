@@ -14,14 +14,21 @@ using InfluxDB.Client.Core;
 using Npgsql;
 using System.Text;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using System.Diagnostics;
 
 namespace DB_Controller.Controllers
 {
     public class UpdateController : DbController
     {
         const int BATCH_SIZE = 5000;
-        public UpdateController(IOptions<GeneralDbSettings> GeneralDbSettings, IOptions<InfluxDbSettings> influxDbSettings, IOptions<TimescaleDbSettings> TimescaleDbSettings) : base(GeneralDbSettings, influxDbSettings, TimescaleDbSettings)
+        private readonly Stopwatch Stopwatch = new Stopwatch();
+        private ILogger<UpdateController> logger;
+
+        public UpdateController(IOptions<GeneralDbSettings> GeneralDbSettings,
+            IOptions<InfluxDbSettings> influxDbSettings, IOptions<TimescaleDbSettings> TimescaleDbSettings,
+            ILogger<UpdateController> logger) : base(GeneralDbSettings, influxDbSettings, TimescaleDbSettings)
         {
+            this.logger = logger;
         }
 
         [Route("update")]
@@ -193,6 +200,7 @@ namespace DB_Controller.Controllers
 
             //connection.Open();
 
+            this.Stopwatch.Restart();
             using var transaction = connection.BeginTransaction();
             using var command = new NpgsqlCommand();
             command.Connection = connection;
@@ -223,6 +231,8 @@ namespace DB_Controller.Controllers
             command.ExecuteNonQuery();
 
             transaction.Commit();
+
+            logger.LogInformation($"Updated {batch.Count} records in {this.Stopwatch.Elapsed}");
 
             // transaction.Commit();
         }

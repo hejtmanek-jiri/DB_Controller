@@ -1,0 +1,322 @@
+2024-04-11 18:24:00.965 +02:00 [INF] User profile is available. Using 'C:\Users\hejtm\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2024-04-11 18:24:01.144 +02:00 [INF] Now listening on: https://localhost:7174
+2024-04-11 18:24:01.144 +02:00 [INF] Now listening on: http://localhost:5252
+2024-04-11 18:24:01.146 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-04-11 18:24:01.146 +02:00 [INF] Hosting environment: Development
+2024-04-11 18:24:01.146 +02:00 [INF] Content root path: C:\Users\hejtm\OneDrive\Plocha\test\DB_Controller\
+2024-04-11 18:24:02.034 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7174/ - -
+2024-04-11 18:24:02.112 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7174/_framework/aspnetcore-browser-refresh.js - -
+2024-04-11 18:24:02.120 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7174/_vs/browserLink - -
+2024-04-11 18:24:02.128 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7174/_framework/aspnetcore-browser-refresh.js - - - 200 13762 application/javascript;+charset=utf-8 14.7975ms
+2024-04-11 18:24:02.192 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7174/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 72.1577ms
+2024-04-11 18:24:02.196 +02:00 [INF] Executing endpoint 'DB_Controller.Controllers.HomeController.Index (DB_Controller)'
+2024-04-11 18:24:02.249 +02:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller DB_Controller.Controllers.HomeController (DB_Controller).
+2024-04-11 18:24:02.281 +02:00 [INF] Executing ViewResult, running view Index.
+2024-04-11 18:24:02.403 +02:00 [INF] Executed ViewResult - view Index executed in 143.0061ms.
+2024-04-11 18:24:02.407 +02:00 [INF] Executed action DB_Controller.Controllers.HomeController.Index (DB_Controller) in 157.4843ms
+2024-04-11 18:24:02.407 +02:00 [INF] Executed endpoint 'DB_Controller.Controllers.HomeController.Index (DB_Controller)'
+2024-04-11 18:24:02.410 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7174/ - - - 200 - text/html;+charset=utf-8 379.9160ms
+2024-04-11 18:24:02.443 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7174/_framework/aspnetcore-browser-refresh.js - -
+2024-04-11 18:24:02.444 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7174/_framework/aspnetcore-browser-refresh.js - - - 200 13762 application/javascript;+charset=utf-8 0.4985ms
+2024-04-11 18:24:02.452 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7174/_vs/browserLink - -
+2024-04-11 18:24:02.462 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7174/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 9.7693ms
+2024-04-11 18:24:04.214 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7174/_framework/aspnetcore-browser-refresh.js - -
+2024-04-11 18:24:04.214 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7174/_framework/aspnetcore-browser-refresh.js - - - 200 13762 application/javascript;+charset=utf-8 0.3596ms
+2024-04-11 18:24:04.218 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7174/_framework/aspnetcore-browser-refresh.js - -
+2024-04-11 18:24:04.218 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7174/_framework/aspnetcore-browser-refresh.js - - - 200 13762 application/javascript;+charset=utf-8 0.2640ms
+2024-04-11 18:24:04.221 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7174/_vs/browserLink - -
+2024-04-11 18:24:04.223 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7174/_framework/aspnetcore-browser-refresh.js - -
+2024-04-11 18:24:04.223 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7174/_framework/aspnetcore-browser-refresh.js - - - 200 13762 application/javascript;+charset=utf-8 0.2928ms
+2024-04-11 18:24:04.228 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7174/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 6.8055ms
+2024-04-11 18:24:04.229 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7174/_vs/browserLink - -
+2024-04-11 18:24:04.236 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7174/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 6.6630ms
+2024-04-11 18:24:04.236 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7174/_vs/browserLink - -
+2024-04-11 18:24:04.242 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7174/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 5.9425ms
+2024-04-11 18:24:09.306 +02:00 [INF] Request starting HTTP/1.1 POST https://localhost:7174/create/ application/x-www-form-urlencoded;+charset=UTF-8 0
+2024-04-11 18:24:09.308 +02:00 [INF] Executing endpoint 'DB_Controller.Controllers.CreateController.CreateData (DB_Controller)'
+2024-04-11 18:24:09.309 +02:00 [INF] Route matched with {action = "CreateData", controller = "Create"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult CreateData() on controller DB_Controller.Controllers.CreateController (DB_Controller).
+2024-04-11 18:24:33.801 +02:00 [INF] Executing ViewResult, running view index.
+2024-04-11 18:24:33.807 +02:00 [INF] Executed ViewResult - view index executed in 7.0643ms.
+2024-04-11 18:24:33.807 +02:00 [INF] Executed action DB_Controller.Controllers.CreateController.CreateData (DB_Controller) in 24498.611ms
+2024-04-11 18:24:33.807 +02:00 [INF] Executed endpoint 'DB_Controller.Controllers.CreateController.CreateData (DB_Controller)'
+2024-04-11 18:24:33.808 +02:00 [INF] Request finished HTTP/1.1 POST https://localhost:7174/create/ application/x-www-form-urlencoded;+charset=UTF-8 0 - 200 - text/html;+charset=utf-8 24501.6117ms
+2024-04-11 18:24:33.809 +02:00 [INF] Request starting HTTP/1.1 POST https://localhost:7174/update/ application/x-www-form-urlencoded;+charset=UTF-8 0
+2024-04-11 18:24:33.810 +02:00 [INF] Executing endpoint 'DB_Controller.Controllers.UpdateController.UpdateData (DB_Controller)'
+2024-04-11 18:24:33.811 +02:00 [INF] Route matched with {action = "UpdateData", controller = "Update"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult UpdateData() on controller DB_Controller.Controllers.UpdateController (DB_Controller).
+2024-04-11 18:24:50.040 +02:00 [INF] Updated 5000 records in 00:00:16.2165221
+2024-04-11 18:25:05.615 +02:00 [INF] Updated 5000 records in 00:00:15.5668510
+2024-04-11 18:25:23.169 +02:00 [INF] Updated 5000 records in 00:00:17.5451110
+2024-04-11 18:25:23.319 +02:00 [INF] Updated 5000 records in 00:00:00.1407707
+2024-04-11 18:25:23.467 +02:00 [INF] Updated 5000 records in 00:00:00.1398275
+2024-04-11 18:25:23.608 +02:00 [INF] Updated 5000 records in 00:00:00.1323932
+2024-04-11 18:25:23.760 +02:00 [INF] Updated 5000 records in 00:00:00.1440177
+2024-04-11 18:25:23.923 +02:00 [INF] Updated 5000 records in 00:00:00.1540965
+2024-04-11 18:25:24.068 +02:00 [INF] Updated 5000 records in 00:00:00.1366997
+2024-04-11 18:25:24.221 +02:00 [INF] Updated 5000 records in 00:00:00.1428451
+2024-04-11 18:25:24.370 +02:00 [INF] Updated 5000 records in 00:00:00.1400551
+2024-04-11 18:25:24.518 +02:00 [INF] Updated 5000 records in 00:00:00.1399191
+2024-04-11 18:25:24.669 +02:00 [INF] Updated 5000 records in 00:00:00.1409419
+2024-04-11 18:25:24.827 +02:00 [INF] Updated 5000 records in 00:00:00.1493833
+2024-04-11 18:25:24.980 +02:00 [INF] Updated 5000 records in 00:00:00.1452052
+2024-04-11 18:25:25.086 +02:00 [INF] Updated 5000 records in 00:00:00.0970441
+2024-04-11 18:25:25.227 +02:00 [INF] Updated 5000 records in 00:00:00.1326177
+2024-04-11 18:25:25.372 +02:00 [INF] Updated 5000 records in 00:00:00.1360541
+2024-04-11 18:25:25.517 +02:00 [INF] Updated 5000 records in 00:00:00.1347905
+2024-04-11 18:25:25.656 +02:00 [INF] Updated 5000 records in 00:00:00.1291731
+2024-04-11 18:25:25.820 +02:00 [INF] Updated 5000 records in 00:00:00.1554332
+2024-04-11 18:25:25.964 +02:00 [INF] Updated 5000 records in 00:00:00.1353156
+2024-04-11 18:25:26.105 +02:00 [INF] Updated 5000 records in 00:00:00.1327603
+2024-04-11 18:25:26.253 +02:00 [INF] Updated 5000 records in 00:00:00.1389497
+2024-04-11 18:25:26.358 +02:00 [INF] Updated 5000 records in 00:00:00.0957814
+2024-04-11 18:25:26.495 +02:00 [INF] Updated 5000 records in 00:00:00.1289065
+2024-04-11 18:25:26.660 +02:00 [INF] Updated 5000 records in 00:00:00.1556516
+2024-04-11 18:25:26.841 +02:00 [INF] Updated 5000 records in 00:00:00.1729182
+2024-04-11 18:25:26.992 +02:00 [INF] Updated 5000 records in 00:00:00.1330810
+2024-04-11 18:25:27.163 +02:00 [INF] Updated 5000 records in 00:00:00.1622248
+2024-04-11 18:25:27.279 +02:00 [INF] Updated 5000 records in 00:00:00.1040739
+2024-04-11 18:25:27.427 +02:00 [INF] Updated 5000 records in 00:00:00.1379917
+2024-04-11 18:25:27.570 +02:00 [INF] Updated 5000 records in 00:00:00.1333805
+2024-04-11 18:25:27.729 +02:00 [INF] Updated 5000 records in 00:00:00.1506670
+2024-04-11 18:25:27.880 +02:00 [INF] Updated 5000 records in 00:00:00.1399892
+2024-04-11 18:25:28.028 +02:00 [INF] Updated 5000 records in 00:00:00.1395127
+2024-04-11 18:25:28.178 +02:00 [INF] Updated 5000 records in 00:00:00.1398326
+2024-04-11 18:25:28.333 +02:00 [INF] Updated 5000 records in 00:00:00.1460019
+2024-04-11 18:25:28.478 +02:00 [INF] Updated 5000 records in 00:00:00.1375765
+2024-04-11 18:25:28.629 +02:00 [INF] Updated 5000 records in 00:00:00.1416363
+2024-04-11 18:25:28.766 +02:00 [INF] Updated 5000 records in 00:00:00.1284769
+2024-04-11 18:25:28.911 +02:00 [INF] Updated 5000 records in 00:00:00.1366414
+2024-04-11 18:25:29.058 +02:00 [INF] Updated 5000 records in 00:00:00.1383324
+2024-04-11 18:25:29.210 +02:00 [INF] Updated 5000 records in 00:00:00.1429684
+2024-04-11 18:25:29.357 +02:00 [INF] Updated 5000 records in 00:00:00.1380935
+2024-04-11 18:25:29.464 +02:00 [INF] Updated 5000 records in 00:00:00.0975177
+2024-04-11 18:25:29.613 +02:00 [INF] Updated 5000 records in 00:00:00.1392262
+2024-04-11 18:25:29.813 +02:00 [INF] Updated 5000 records in 00:00:00.1920740
+2024-04-11 18:25:29.988 +02:00 [INF] Updated 5000 records in 00:00:00.1653822
+2024-04-11 18:25:30.152 +02:00 [INF] Updated 5000 records in 00:00:00.1552423
+2024-04-11 18:25:30.264 +02:00 [INF] Updated 5000 records in 00:00:00.1031246
+2024-04-11 18:25:30.407 +02:00 [INF] Updated 5000 records in 00:00:00.1346206
+2024-04-11 18:25:30.550 +02:00 [INF] Updated 5000 records in 00:00:00.1346093
+2024-04-11 18:25:30.709 +02:00 [INF] Updated 5000 records in 00:00:00.1492105
+2024-04-11 18:25:30.838 +02:00 [INF] Updated 5000 records in 00:00:00.1203451
+2024-04-11 18:25:30.972 +02:00 [INF] Updated 5000 records in 00:00:00.1238229
+2024-04-11 18:25:31.099 +02:00 [INF] Updated 5000 records in 00:00:00.1190584
+2024-04-11 18:25:31.230 +02:00 [INF] Updated 5000 records in 00:00:00.1212129
+2024-04-11 18:25:31.358 +02:00 [INF] Updated 5000 records in 00:00:00.1185569
+2024-04-11 18:25:31.499 +02:00 [INF] Updated 5000 records in 00:00:00.1314497
+2024-04-11 18:25:31.640 +02:00 [INF] Updated 5000 records in 00:00:00.1331428
+2024-04-11 18:25:31.782 +02:00 [INF] Updated 5000 records in 00:00:00.1323324
+2024-04-11 18:25:31.910 +02:00 [INF] Updated 5000 records in 00:00:00.1180267
+2024-04-11 18:25:32.041 +02:00 [INF] Updated 5000 records in 00:00:00.1230741
+2024-04-11 18:25:32.167 +02:00 [INF] Updated 5000 records in 00:00:00.1174020
+2024-04-11 18:25:32.259 +02:00 [INF] Updated 5000 records in 00:00:00.0837318
+2024-04-11 18:25:32.388 +02:00 [INF] Updated 5000 records in 00:00:00.1199102
+2024-04-11 18:25:32.508 +02:00 [INF] Updated 5000 records in 00:00:00.1119626
+2024-04-11 18:25:32.642 +02:00 [INF] Updated 5000 records in 00:00:00.1228967
+2024-04-11 18:25:32.733 +02:00 [INF] Updated 5000 records in 00:00:00.0817395
+2024-04-11 18:25:32.827 +02:00 [INF] Updated 5000 records in 00:00:00.0838536
+2024-04-11 18:25:32.947 +02:00 [INF] Updated 5000 records in 00:00:00.1116117
+2024-04-11 18:25:33.090 +02:00 [INF] Updated 5000 records in 00:00:00.1345235
+2024-04-11 18:25:33.223 +02:00 [INF] Updated 5000 records in 00:00:00.1243769
+2024-04-11 18:25:33.350 +02:00 [INF] Updated 5000 records in 00:00:00.1185222
+2024-04-11 18:25:33.438 +02:00 [INF] Updated 5000 records in 00:00:00.0776970
+2024-04-11 18:25:33.559 +02:00 [INF] Updated 5000 records in 00:00:00.1127836
+2024-04-11 18:25:33.701 +02:00 [INF] Updated 5000 records in 00:00:00.1336985
+2024-04-11 18:25:33.828 +02:00 [INF] Updated 5000 records in 00:00:00.1179695
+2024-04-11 18:25:33.960 +02:00 [INF] Updated 5000 records in 00:00:00.1232979
+2024-04-11 18:25:34.079 +02:00 [INF] Updated 5000 records in 00:00:00.1105749
+2024-04-11 18:25:34.210 +02:00 [INF] Updated 5000 records in 00:00:00.1221264
+2024-04-11 18:25:34.342 +02:00 [INF] Updated 5000 records in 00:00:00.1226508
+2024-04-11 18:25:34.468 +02:00 [INF] Updated 5000 records in 00:00:00.1165922
+2024-04-11 18:25:34.600 +02:00 [INF] Updated 5000 records in 00:00:00.1223059
+2024-04-11 18:25:34.737 +02:00 [INF] Updated 5000 records in 00:00:00.1269750
+2024-04-11 18:25:34.868 +02:00 [INF] Updated 5000 records in 00:00:00.1208344
+2024-04-11 18:25:35.026 +02:00 [INF] Updated 5000 records in 00:00:00.1493417
+2024-04-11 18:25:35.147 +02:00 [INF] Updated 5000 records in 00:00:00.1132930
+2024-04-11 18:25:35.279 +02:00 [INF] Updated 5000 records in 00:00:00.1231431
+2024-04-11 18:25:35.404 +02:00 [INF] Updated 5000 records in 00:00:00.1166987
+2024-04-11 18:25:35.541 +02:00 [INF] Updated 5000 records in 00:00:00.1279829
+2024-04-11 18:25:35.676 +02:00 [INF] Updated 5000 records in 00:00:00.1264847
+2024-04-11 18:25:35.812 +02:00 [INF] Updated 5000 records in 00:00:00.1274347
+2024-04-11 18:25:35.941 +02:00 [INF] Updated 5000 records in 00:00:00.1191171
+2024-04-11 18:25:36.071 +02:00 [INF] Updated 5000 records in 00:00:00.1211180
+2024-04-11 18:25:36.199 +02:00 [INF] Updated 5000 records in 00:00:00.1190193
+2024-04-11 18:25:36.330 +02:00 [INF] Updated 5000 records in 00:00:00.1221345
+2024-04-11 18:25:36.473 +02:00 [INF] Updated 5000 records in 00:00:00.1335755
+2024-04-11 18:25:36.610 +02:00 [INF] Updated 5000 records in 00:00:00.1279769
+2024-04-11 18:25:36.746 +02:00 [INF] Updated 5000 records in 00:00:00.1266130
+2024-04-11 18:25:36.870 +02:00 [INF] Updated 5000 records in 00:00:00.1146612
+2024-04-11 18:25:37.012 +02:00 [INF] Updated 5000 records in 00:00:00.1331659
+2024-04-11 18:25:37.163 +02:00 [INF] Updated 5000 records in 00:00:00.1415280
+2024-04-11 18:25:37.297 +02:00 [INF] Updated 5000 records in 00:00:00.1240764
+2024-04-11 18:25:37.480 +02:00 [INF] Updated 5000 records in 00:00:00.1363661
+2024-04-11 18:25:37.615 +02:00 [INF] Updated 5000 records in 00:00:00.1261298
+2024-04-11 18:25:37.744 +02:00 [INF] Updated 5000 records in 00:00:00.1208835
+2024-04-11 18:25:37.871 +02:00 [INF] Updated 5000 records in 00:00:00.1169458
+2024-04-11 18:25:38.000 +02:00 [INF] Updated 5000 records in 00:00:00.1215210
+2024-04-11 18:25:38.139 +02:00 [INF] Updated 5000 records in 00:00:00.1289400
+2024-04-11 18:25:38.281 +02:00 [INF] Updated 5000 records in 00:00:00.1341976
+2024-04-11 18:25:38.437 +02:00 [INF] Updated 5000 records in 00:00:00.1459018
+2024-04-11 18:25:38.580 +02:00 [INF] Updated 5000 records in 00:00:00.1335859
+2024-04-11 18:25:38.712 +02:00 [INF] Updated 5000 records in 00:00:00.1230908
+2024-04-11 18:25:38.843 +02:00 [INF] Updated 5000 records in 00:00:00.1219480
+2024-04-11 18:25:38.971 +02:00 [INF] Updated 5000 records in 00:00:00.1184255
+2024-04-11 18:25:39.100 +02:00 [INF] Updated 5000 records in 00:00:00.1203759
+2024-04-11 18:25:39.247 +02:00 [INF] Updated 5000 records in 00:00:00.1387103
+2024-04-11 18:25:39.373 +02:00 [INF] Updated 5000 records in 00:00:00.1173891
+2024-04-11 18:25:39.499 +02:00 [INF] Updated 5000 records in 00:00:00.1169722
+2024-04-11 18:25:39.635 +02:00 [INF] Updated 5000 records in 00:00:00.1258335
+2024-04-11 18:25:39.729 +02:00 [INF] Updated 5000 records in 00:00:00.0848319
+2024-04-11 18:25:39.870 +02:00 [INF] Updated 5000 records in 00:00:00.1302418
+2024-04-11 18:25:40.005 +02:00 [INF] Updated 5000 records in 00:00:00.1261254
+2024-04-11 18:25:40.147 +02:00 [INF] Updated 5000 records in 00:00:00.1331033
+2024-04-11 18:25:40.279 +02:00 [INF] Updated 5000 records in 00:00:00.1228978
+2024-04-11 18:25:40.400 +02:00 [INF] Updated 5000 records in 00:00:00.1125920
+2024-04-11 18:25:40.532 +02:00 [INF] Updated 5000 records in 00:00:00.1227039
+2024-04-11 18:25:40.664 +02:00 [INF] Updated 5000 records in 00:00:00.1237325
+2024-04-11 18:25:40.801 +02:00 [INF] Updated 5000 records in 00:00:00.1287544
+2024-04-11 18:25:40.950 +02:00 [INF] Updated 5000 records in 00:00:00.1393805
+2024-04-11 18:25:41.083 +02:00 [INF] Updated 5000 records in 00:00:00.1238613
+2024-04-11 18:25:41.213 +02:00 [INF] Updated 5000 records in 00:00:00.1200678
+2024-04-11 18:25:41.351 +02:00 [INF] Updated 5000 records in 00:00:00.1291265
+2024-04-11 18:25:41.485 +02:00 [INF] Updated 5000 records in 00:00:00.1250314
+2024-04-11 18:25:41.623 +02:00 [INF] Updated 5000 records in 00:00:00.1286919
+2024-04-11 18:25:41.765 +02:00 [INF] Updated 5000 records in 00:00:00.1331848
+2024-04-11 18:25:41.914 +02:00 [INF] Updated 5000 records in 00:00:00.1364717
+2024-04-11 18:25:42.052 +02:00 [INF] Updated 5000 records in 00:00:00.1251370
+2024-04-11 18:25:42.181 +02:00 [INF] Updated 5000 records in 00:00:00.1196664
+2024-04-11 18:25:42.315 +02:00 [INF] Updated 5000 records in 00:00:00.1257707
+2024-04-11 18:25:42.474 +02:00 [INF] Updated 5000 records in 00:00:00.1498750
+2024-04-11 18:25:42.621 +02:00 [INF] Updated 5000 records in 00:00:00.1378398
+2024-04-11 18:25:42.760 +02:00 [INF] Updated 5000 records in 00:00:00.1314408
+2024-04-11 18:25:42.933 +02:00 [INF] Updated 5000 records in 00:00:00.1644627
+2024-04-11 18:25:43.137 +02:00 [INF] Updated 5000 records in 00:00:00.1954441
+2024-04-11 18:25:43.280 +02:00 [INF] Updated 5000 records in 00:00:00.1307403
+2024-04-11 18:25:43.419 +02:00 [INF] Updated 5000 records in 00:00:00.1289451
+2024-04-11 18:25:43.578 +02:00 [INF] Updated 5000 records in 00:00:00.1492378
+2024-04-11 18:25:43.730 +02:00 [INF] Updated 5000 records in 00:00:00.1429202
+2024-04-11 18:25:43.842 +02:00 [INF] Updated 5000 records in 00:00:00.1008941
+2024-04-11 18:25:43.995 +02:00 [INF] Updated 5000 records in 00:00:00.1426405
+2024-04-11 18:25:44.157 +02:00 [INF] Updated 5000 records in 00:00:00.1505244
+2024-04-11 18:25:44.312 +02:00 [INF] Updated 5000 records in 00:00:00.1473313
+2024-04-11 18:25:44.446 +02:00 [INF] Updated 5000 records in 00:00:00.1247321
+2024-04-11 18:25:44.603 +02:00 [INF] Updated 5000 records in 00:00:00.1469119
+2024-04-11 18:25:44.740 +02:00 [INF] Updated 5000 records in 00:00:00.1283928
+2024-04-11 18:25:44.863 +02:00 [INF] Updated 5000 records in 00:00:00.1146949
+2024-04-11 18:25:45.017 +02:00 [INF] Updated 5000 records in 00:00:00.1458456
+2024-04-11 18:25:45.158 +02:00 [INF] Updated 5000 records in 00:00:00.1324690
+2024-04-11 18:25:45.310 +02:00 [INF] Updated 5000 records in 00:00:00.1432319
+2024-04-11 18:25:45.480 +02:00 [INF] Updated 5000 records in 00:00:00.1617686
+2024-04-11 18:25:45.648 +02:00 [INF] Updated 5000 records in 00:00:00.1590224
+2024-04-11 18:25:45.785 +02:00 [INF] Updated 5000 records in 00:00:00.1259676
+2024-04-11 18:25:45.877 +02:00 [INF] Updated 5000 records in 00:00:00.0817239
+2024-04-11 18:25:46.033 +02:00 [INF] Updated 5000 records in 00:00:00.1403911
+2024-04-11 18:25:46.158 +02:00 [INF] Updated 5000 records in 00:00:00.1160304
+2024-04-11 18:25:46.296 +02:00 [INF] Updated 5000 records in 00:00:00.1288563
+2024-04-11 18:25:46.431 +02:00 [INF] Updated 5000 records in 00:00:00.1251849
+2024-04-11 18:25:46.563 +02:00 [INF] Updated 5000 records in 00:00:00.1230042
+2024-04-11 18:25:46.725 +02:00 [INF] Updated 5000 records in 00:00:00.1451883
+2024-04-11 18:25:46.859 +02:00 [INF] Updated 5000 records in 00:00:00.1250710
+2024-04-11 18:25:47.000 +02:00 [INF] Updated 5000 records in 00:00:00.1317342
+2024-04-11 18:25:47.137 +02:00 [INF] Updated 5000 records in 00:00:00.1272467
+2024-04-11 18:25:47.200 +02:00 [INF] Updated 1000 records in 00:00:00.0605379
+2024-04-11 18:25:47.201 +02:00 [INF] Executing ViewResult, running view index.
+2024-04-11 18:25:47.202 +02:00 [INF] Executed ViewResult - view index executed in 2.3573ms.
+2024-04-11 18:25:47.205 +02:00 [INF] Executed action DB_Controller.Controllers.UpdateController.UpdateData (DB_Controller) in 73393.7336ms
+2024-04-11 18:25:47.206 +02:00 [INF] Executed endpoint 'DB_Controller.Controllers.UpdateController.UpdateData (DB_Controller)'
+2024-04-11 18:25:47.207 +02:00 [INF] Request finished HTTP/1.1 POST https://localhost:7174/update/ application/x-www-form-urlencoded;+charset=UTF-8 0 - 200 - text/html;+charset=utf-8 73397.4132ms
+2024-04-11 18:25:47.227 +02:00 [INF] Request starting HTTP/1.1 POST https://localhost:7174/read/ application/x-www-form-urlencoded;+charset=UTF-8 108
+2024-04-11 18:25:47.228 +02:00 [INF] Executing endpoint 'DB_Controller.Controllers.ReadController.ReadData (DB_Controller)'
+2024-04-11 18:25:47.250 +02:00 [INF] Route matched with {action = "ReadData", controller = "Read"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] ReadData(DB_Controller.Models.DateTimeFormViewModel) on controller DB_Controller.Controllers.ReadController (DB_Controller).
+2024-04-11 18:25:49.142 +02:00 [INF] Executing ViewResult, running view ReadData.
+2024-04-11 18:25:51.412 +02:00 [INF] Executed ViewResult - view ReadData executed in 2270.519ms.
+2024-04-11 18:25:51.415 +02:00 [INF] Executed action DB_Controller.Controllers.ReadController.ReadData (DB_Controller) in 4164.8642ms
+2024-04-11 18:25:51.415 +02:00 [INF] Executed endpoint 'DB_Controller.Controllers.ReadController.ReadData (DB_Controller)'
+2024-04-11 18:25:51.458 +02:00 [INF] Request finished HTTP/1.1 POST https://localhost:7174/read/ application/x-www-form-urlencoded;+charset=UTF-8 108 - 200 - text/html;+charset=utf-8 4232.4312ms
+2024-04-11 18:25:51.510 +02:00 [INF] Request starting HTTP/1.1 POST https://localhost:7174/Delete/DeleteDataSubmit application/x-www-form-urlencoded;+charset=UTF-8 39
+2024-04-11 18:25:51.510 +02:00 [INF] Executing endpoint 'DB_Controller.Controllers.DeleteController.DeleteDataSubmit (DB_Controller)'
+2024-04-11 18:25:51.512 +02:00 [INF] Route matched with {action = "DeleteDataSubmit", controller = "Delete"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeleteDataSubmit(DB_Controller.Models.DateTimeFormViewModel) on controller DB_Controller.Controllers.DeleteController (DB_Controller).
+2024-04-11 18:25:52.154 +02:00 [INF] Executing ViewResult, running view Index.
+2024-04-11 18:25:52.157 +02:00 [INF] Executed ViewResult - view Index executed in 3.2756ms.
+2024-04-11 18:25:52.157 +02:00 [INF] Executed action DB_Controller.Controllers.DeleteController.DeleteDataSubmit (DB_Controller) in 644.9837ms
+2024-04-11 18:25:52.157 +02:00 [INF] Executed endpoint 'DB_Controller.Controllers.DeleteController.DeleteDataSubmit (DB_Controller)'
+2024-04-11 18:25:52.157 +02:00 [INF] Request finished HTTP/1.1 POST https://localhost:7174/Delete/DeleteDataSubmit application/x-www-form-urlencoded;+charset=UTF-8 39 - 200 - text/html;+charset=utf-8 647.5010ms
+2024-04-11 18:25:52.164 +02:00 [INF] Request starting HTTP/1.1 POST https://localhost:7174/create/ application/x-www-form-urlencoded;+charset=UTF-8 0
+2024-04-11 18:25:52.164 +02:00 [INF] Executing endpoint 'DB_Controller.Controllers.CreateController.CreateData (DB_Controller)'
+2024-04-11 18:25:52.164 +02:00 [INF] Route matched with {action = "CreateData", controller = "Create"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult CreateData() on controller DB_Controller.Controllers.CreateController (DB_Controller).
+2024-04-11 18:26:16.550 +02:00 [INF] Executing ViewResult, running view index.
+2024-04-11 18:26:16.551 +02:00 [INF] Executed ViewResult - view index executed in 0.6123ms.
+2024-04-11 18:26:16.551 +02:00 [INF] Executed action DB_Controller.Controllers.CreateController.CreateData (DB_Controller) in 24387.132ms
+2024-04-11 18:26:16.551 +02:00 [INF] Executed endpoint 'DB_Controller.Controllers.CreateController.CreateData (DB_Controller)'
+2024-04-11 18:26:16.551 +02:00 [INF] Request finished HTTP/1.1 POST https://localhost:7174/create/ application/x-www-form-urlencoded;+charset=UTF-8 0 - 200 - text/html;+charset=utf-8 24387.4507ms
+2024-04-11 18:26:16.553 +02:00 [INF] Request starting HTTP/1.1 POST https://localhost:7174/update/ application/x-www-form-urlencoded;+charset=UTF-8 0
+2024-04-11 18:26:16.553 +02:00 [INF] Executing endpoint 'DB_Controller.Controllers.UpdateController.UpdateData (DB_Controller)'
+2024-04-11 18:26:16.553 +02:00 [INF] Route matched with {action = "UpdateData", controller = "Update"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult UpdateData() on controller DB_Controller.Controllers.UpdateController (DB_Controller).
+2024-04-11 18:26:16.694 +02:00 [INF] Updated 5000 records in 00:00:00.1303865
+2024-04-11 18:26:16.825 +02:00 [INF] Updated 5000 records in 00:00:00.1185543
+2024-04-11 18:26:16.946 +02:00 [INF] Updated 5000 records in 00:00:00.1119158
+2024-04-11 18:26:17.075 +02:00 [INF] Updated 5000 records in 00:00:00.1199976
+2024-04-11 18:26:17.210 +02:00 [INF] Updated 5000 records in 00:00:00.1266204
+2024-04-11 18:26:17.354 +02:00 [INF] Updated 5000 records in 00:00:00.1310224
+2024-04-11 18:26:17.486 +02:00 [INF] Updated 5000 records in 00:00:00.1215888
+2024-04-11 18:26:17.628 +02:00 [INF] Updated 5000 records in 00:00:00.1314433
+2024-04-11 18:26:17.761 +02:00 [INF] Updated 5000 records in 00:00:00.1235174
+2024-04-11 18:26:17.885 +02:00 [INF] Updated 5000 records in 00:00:00.1159591
+2024-04-11 18:26:18.006 +02:00 [INF] Updated 5000 records in 00:00:00.1118903
+2024-04-11 18:26:18.155 +02:00 [INF] Updated 5000 records in 00:00:00.1150494
+2024-04-11 18:26:18.276 +02:00 [INF] Updated 5000 records in 00:00:00.1129688
+2024-04-11 18:26:18.406 +02:00 [INF] Updated 5000 records in 00:00:00.1210812
+2024-04-11 18:26:18.537 +02:00 [INF] Updated 5000 records in 00:00:00.1223216
+2024-04-11 18:26:18.665 +02:00 [INF] Updated 5000 records in 00:00:00.1201828
+2024-04-11 18:26:18.786 +02:00 [INF] Updated 5000 records in 00:00:00.1118558
+2024-04-11 18:26:18.915 +02:00 [INF] Updated 5000 records in 00:00:00.1210953
+2024-04-11 18:26:19.037 +02:00 [INF] Updated 5000 records in 00:00:00.1129491
+2024-04-11 18:26:19.158 +02:00 [INF] Updated 5000 records in 00:00:00.1127551
+2024-04-11 18:26:19.292 +02:00 [INF] Updated 5000 records in 00:00:00.1262013
+2024-04-11 18:26:19.416 +02:00 [INF] Updated 5000 records in 00:00:00.1141710
+2024-04-11 18:26:19.539 +02:00 [INF] Updated 5000 records in 00:00:00.1148946
+2024-04-11 18:26:19.659 +02:00 [INF] Updated 5000 records in 00:00:00.1117703
+2024-04-11 18:26:19.788 +02:00 [INF] Updated 5000 records in 00:00:00.1206963
+2024-04-11 18:26:19.914 +02:00 [INF] Updated 5000 records in 00:00:00.1160430
+2024-04-11 18:26:20.085 +02:00 [INF] Updated 5000 records in 00:00:00.1628891
+2024-04-11 18:26:20.239 +02:00 [INF] Updated 5000 records in 00:00:00.1451351
+2024-04-11 18:26:20.367 +02:00 [INF] Updated 5000 records in 00:00:00.1192814
+2024-04-11 18:26:20.490 +02:00 [INF] Updated 5000 records in 00:00:00.1139744
+2024-04-11 18:26:20.615 +02:00 [INF] Updated 5000 records in 00:00:00.1167313
+2024-04-11 18:26:20.741 +02:00 [INF] Updated 5000 records in 00:00:00.1174102
+2024-04-11 18:26:20.866 +02:00 [INF] Updated 5000 records in 00:00:00.1164763
+2024-04-11 18:26:20.997 +02:00 [INF] Updated 5000 records in 00:00:00.1221069
+2024-04-11 18:26:21.128 +02:00 [INF] Updated 5000 records in 00:00:00.1222605
+2024-04-11 18:26:21.259 +02:00 [INF] Updated 5000 records in 00:00:00.1209875
+2024-04-11 18:26:21.392 +02:00 [INF] Updated 5000 records in 00:00:00.1244818
+2024-04-11 18:26:21.516 +02:00 [INF] Updated 5000 records in 00:00:00.1154090
+2024-04-11 18:26:21.650 +02:00 [INF] Updated 5000 records in 00:00:00.1237278
+2024-04-11 18:26:21.790 +02:00 [INF] Updated 5000 records in 00:00:00.1307804
+2024-04-11 18:26:21.915 +02:00 [INF] Updated 5000 records in 00:00:00.1160738
+2024-04-11 18:26:22.044 +02:00 [INF] Updated 5000 records in 00:00:00.1190819
+2024-04-11 18:26:22.166 +02:00 [INF] Updated 5000 records in 00:00:00.1139398
+2024-04-11 18:26:22.287 +02:00 [INF] Updated 5000 records in 00:00:00.1120789
+2024-04-11 18:26:22.407 +02:00 [INF] Updated 5000 records in 00:00:00.1114177
+2024-04-11 18:26:22.538 +02:00 [INF] Updated 5000 records in 00:00:00.1218066
+2024-04-11 18:26:22.672 +02:00 [INF] Updated 5000 records in 00:00:00.1251760
+2024-04-11 18:26:22.798 +02:00 [INF] Updated 5000 records in 00:00:00.1176190
+2024-04-11 18:26:22.915 +02:00 [INF] Updated 5000 records in 00:00:00.1091675
+2024-04-11 18:26:23.012 +02:00 [INF] Updated 5000 records in 00:00:00.0875082
+2024-04-11 18:26:23.137 +02:00 [INF] Updated 5000 records in 00:00:00.1165171
+2024-04-11 18:26:23.267 +02:00 [INF] Updated 5000 records in 00:00:00.1210003
+2024-04-11 18:26:23.396 +02:00 [INF] Updated 5000 records in 00:00:00.1195890
+2024-04-11 18:26:23.528 +02:00 [INF] Updated 5000 records in 00:00:00.1238890
+2024-04-11 18:26:23.658 +02:00 [INF] Updated 5000 records in 00:00:00.1190617
+2024-04-11 18:26:23.781 +02:00 [INF] Updated 5000 records in 00:00:00.1145109
+2024-04-11 18:26:23.915 +02:00 [INF] Updated 5000 records in 00:00:00.1237524
+2024-04-11 18:26:24.050 +02:00 [INF] Updated 5000 records in 00:00:00.1255819
+2024-04-11 18:26:24.177 +02:00 [INF] Updated 5000 records in 00:00:00.1185392
+2024-04-11 18:26:24.310 +02:00 [INF] Updated 5000 records in 00:00:00.1245680
+2024-04-11 18:26:24.439 +02:00 [INF] Updated 5000 records in 00:00:00.1198260
+2024-04-11 18:26:24.577 +02:00 [INF] Updated 5000 records in 00:00:00.1288667
+2024-04-11 18:26:24.698 +02:00 [INF] Updated 5000 records in 00:00:00.1114016
+2024-04-11 18:26:24.845 +02:00 [INF] Updated 5000 records in 00:00:00.1385238
+2024-04-11 18:26:24.989 +02:00 [INF] Updated 5000 records in 00:00:00.1327590
+2024-04-11 18:26:25.117 +02:00 [INF] Updated 5000 records in 00:00:00.1189228
+2024-04-11 18:26:25.251 +02:00 [INF] Updated 5000 records in 00:00:00.1246367
+2024-04-11 18:26:25.379 +02:00 [INF] Updated 5000 records in 00:00:00.1185697
+2024-04-11 18:26:25.511 +02:00 [INF] Updated 5000 records in 00:00:00.1228773
